@@ -188,25 +188,15 @@ export function Timeline() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="phone">Phone Number</Label>
+                            <Label htmlFor="email">Email</Label>
                             <Input
-                              id="phone"
-                              value={formData.phone}
-                              onChange={(e) => updateFormData('phone', e.target.value)}
-                              placeholder="Your phone number"
+                              id="email"
+                              type="email"
+                              value={formData.email}
+                              onChange={(e) => updateFormData('email', e.target.value)}
+                              placeholder="Your email address"
                             />
                           </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="address">Address</Label>
-                          <Textarea
-                            id="address"
-                            value={formData.address}
-                            onChange={(e) => updateFormData('address', e.target.value)}
-                            placeholder="Your full address"
-                            rows={2}
-                          />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -220,78 +210,13 @@ export function Timeline() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="jobTitle">Job Title</Label>
-                            <Input
-                              id="jobTitle"
-                              value={formData.jobTitle}
-                              onChange={(e) => updateFormData('jobTitle', e.target.value)}
-                              placeholder="Your job title"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="employerAddress">Employer Address</Label>
-                          <Textarea
-                            id="employerAddress"
-                            value={formData.employerAddress}
-                            onChange={(e) => updateFormData('employerAddress', e.target.value)}
-                            placeholder="Employer's full address"
-                            rows={2}
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="employmentStartDate">Employment Start Date</Label>
-                            <Input
-                              id="employmentStartDate"
-                              type="date"
-                              value={formData.employmentStartDate}
-                              onChange={(e) => updateFormData('employmentStartDate', e.target.value)}
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="employmentEndDate">Employment End Date</Label>
+                            <Label htmlFor="employmentEndDate">Termination Date</Label>
                             <Input
                               id="employmentEndDate"
                               type="date"
                               value={formData.employmentEndDate}
                               onChange={(e) => updateFormData('employmentEndDate', e.target.value)}
                             />
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="complaintSummary">Complaint Summary</Label>
-                          <Textarea
-                            id="complaintSummary"
-                            value={formData.complaintSummary}
-                            onChange={(e) => updateFormData('complaintSummary', e.target.value)}
-                            placeholder="Briefly describe your complaint (e.g., unfair dismissal, discrimination)"
-                            rows={4}
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label>Upload Supporting Documents</Label>
-                          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
-                            <input
-                              type="file"
-                              multiple
-                              className="hidden"
-                              id="acas-upload"
-                              onChange={(e) => handleFileUpload('acas', e.target.files)}
-                            />
-                            <label htmlFor="acas-upload" className="cursor-pointer">
-                              <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
-                              <p className="text-sm text-muted-foreground">Click to upload documents</p>
-                            </label>
-                            {uploadedFiles['acas']?.length > 0 && (
-                              <div className="mt-2 text-sm text-primary">
-                                {uploadedFiles['acas'].length} file(s) uploaded
-                              </div>
-                            )}
                           </div>
                         </div>
 
