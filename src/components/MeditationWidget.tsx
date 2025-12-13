@@ -73,6 +73,107 @@ When you're ready, open your eyes and face your day with renewed strength.`
   }
 ];
 
+// Breathing animation component
+function BreathingCircle({ isPlaying }: { isPlaying: boolean }) {
+  const [phase, setPhase] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
+  const [count, setCount] = useState(4);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      setPhase('inhale');
+      setCount(4);
+      return;
+    }
+
+    const phases = [
+      { name: 'inhale' as const, duration: 4000, counts: 4 },
+      { name: 'hold' as const, duration: 4000, counts: 4 },
+      { name: 'exhale' as const, duration: 6000, counts: 6 },
+    ];
+
+    let phaseIndex = 0;
+    let countDown = phases[0].counts;
+
+    const countInterval = setInterval(() => {
+      countDown--;
+      if (countDown <= 0) {
+        phaseIndex = (phaseIndex + 1) % phases.length;
+        countDown = phases[phaseIndex].counts;
+        setPhase(phases[phaseIndex].name);
+      }
+      setCount(countDown);
+    }, 1000);
+
+    return () => clearInterval(countInterval);
+  }, [isPlaying]);
+
+  return (
+    <div className="flex flex-col items-center justify-center py-6">
+      <div className="relative w-32 h-32 flex items-center justify-center">
+        {/* Outer glow */}
+        <div
+          className={cn(
+            "absolute inset-0 rounded-full transition-all duration-1000 ease-in-out",
+            phase === 'inhale' && "scale-100 bg-violet-500/10",
+            phase === 'hold' && "scale-110 bg-violet-500/15",
+            phase === 'exhale' && "scale-75 bg-violet-500/5"
+          )}
+          style={{
+            transitionDuration: phase === 'inhale' ? '4s' : phase === 'hold' ? '0.3s' : '6s',
+          }}
+        />
+        
+        {/* Middle ring */}
+        <div
+          className={cn(
+            "absolute inset-2 rounded-full border-2 border-violet-400/30 transition-all ease-in-out",
+            phase === 'inhale' && "scale-100",
+            phase === 'hold' && "scale-110",
+            phase === 'exhale' && "scale-75"
+          )}
+          style={{
+            transitionDuration: phase === 'inhale' ? '4s' : phase === 'hold' ? '0.3s' : '6s',
+          }}
+        />
+        
+        {/* Main breathing circle */}
+        <div
+          className={cn(
+            "absolute inset-4 rounded-full transition-all ease-in-out",
+            "bg-gradient-to-br from-violet-400 via-purple-500 to-fuchsia-500",
+            "shadow-lg",
+            phase === 'inhale' && "scale-100 shadow-violet-500/50",
+            phase === 'hold' && "scale-110 shadow-violet-500/60",
+            phase === 'exhale' && "scale-75 shadow-violet-500/30"
+          )}
+          style={{
+            transitionDuration: phase === 'inhale' ? '4s' : phase === 'hold' ? '0.3s' : '6s',
+          }}
+        />
+        
+        {/* Center content */}
+        <div className="relative z-10 text-center">
+          <div className="text-2xl font-bold text-white drop-shadow-lg">{count}</div>
+        </div>
+      </div>
+      
+      {/* Phase label */}
+      <div className="mt-4 text-center">
+        <span className={cn(
+          "text-sm font-medium px-3 py-1 rounded-full",
+          phase === 'inhale' && "bg-emerald-500/20 text-emerald-400",
+          phase === 'hold' && "bg-amber-500/20 text-amber-400",
+          phase === 'exhale' && "bg-blue-500/20 text-blue-400"
+        )}>
+          {phase === 'inhale' && 'Breathe In'}
+          {phase === 'hold' && 'Hold'}
+          {phase === 'exhale' && 'Breathe Out'}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function MeditationWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -163,6 +264,9 @@ export function MeditationWidget() {
         </button>
       </div>
 
+      {/* Breathing Animation */}
+      <BreathingCircle isPlaying={isPlaying} />
+
       <div className="grid grid-cols-3 gap-2 mb-4">
         {MEDITATION_SCRIPTS.map((script, index) => (
           <button
@@ -185,12 +289,6 @@ export function MeditationWidget() {
             <div className="text-xs opacity-75">{script.duration}</div>
           </button>
         ))}
-      </div>
-
-      <div className="bg-background/50 rounded-lg p-4 mb-4 max-h-32 overflow-y-auto">
-        <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
-          {MEDITATION_SCRIPTS[selectedScript].text.slice(0, 200)}...
-        </p>
       </div>
 
       <Button
