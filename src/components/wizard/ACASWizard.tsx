@@ -5,7 +5,6 @@ import { StepChooseOptions } from './StepChooseOptions';
 import { StepDateCheck } from './StepDateCheck';
 import { StepSignUp } from './StepSignUp';
 import { Timeline } from './Timeline';
-import { GreenPTChat } from '@/components/GreenPTChat';
 import { useAuth } from '@/hooks/useAuth';
 
 const STEP_LABELS = ['Introduction', 'Options', 'Date Check', 'Sign Up'];
@@ -30,9 +29,8 @@ export function ACASWizard() {
   if (user) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="max-w-2xl mx-auto px-4 py-6 sm:py-10 space-y-6">
+        <div className="max-w-2xl mx-auto px-4 py-6 sm:py-10">
           <Timeline />
-          <GreenPTChat />
         </div>
       </div>
     );
