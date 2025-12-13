@@ -126,11 +126,12 @@ export function Timeline() {
 
   // Calculate deadlines based on termination date
   const getDeadlines = () => {
-    if (!formData.employmentEndDate) return { acas: null, et1: null };
+    if (!formData.employmentEndDate) return { acas: null, et1: null, et3: null };
     const terminationDate = new Date(formData.employmentEndDate);
     const acasDeadline = addDays(addMonths(terminationDate, 3), -1); // 3 months minus 1 day
-    const et1Deadline = addMonths(acasDeadline, 1); // 1 month after ACAS
-    return { acas: acasDeadline, et1: et1Deadline };
+    const et1Deadline = addDays(acasDeadline, 30); // 30 days after ACAS deadline
+    const et3Deadline = addDays(et1Deadline, 28); // 28 days after ET1 deadline
+    return { acas: acasDeadline, et1: et1Deadline, et3: et3Deadline };
   };
 
   const deadlines = getDeadlines();
@@ -143,10 +144,16 @@ export function Timeline() {
     return { date: deadline, daysRemaining, isUrgent, isPast };
   };
 
+  const isStageComplete = (stageId: string) => {
+    if (stageId === 'acas') return sentForms.acas;
+    if (stageId === 'et1') return sentForms.et1;
+    return false;
+  };
+
   const stages = [
     { id: 'acas', title: 'ACAS Pre-conciliation Form', description: 'Submit Early Conciliation notification to ACAS', deadline: getDeadlineInfo(deadlines.acas) },
     { id: 'et1', title: 'ET1 Form', description: 'Submit your Employment Tribunal claim', deadline: getDeadlineInfo(deadlines.et1) },
-    { id: 'et3', title: 'ET3 Response', description: 'Employer response and case management', deadline: null },
+    { id: 'et3', title: 'ET3 Response', description: 'Employer response and case management', deadline: getDeadlineInfo(deadlines.et3) },
   ];
 
   return (
@@ -178,8 +185,17 @@ export function Timeline() {
                   onClick={() => toggleStage(stage.id)}
                   className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors text-left"
                 >
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-muted text-muted-foreground">
-                    <span className="font-semibold">{index + 1}</span>
+                  <div className={cn(
+                    "w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors",
+                    isStageComplete(stage.id) 
+                      ? "bg-green-500 text-white" 
+                      : "bg-muted text-muted-foreground"
+                  )}>
+                    {isStageComplete(stage.id) ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
+                      <span className="font-semibold">{index + 1}</span>
+                    )}
                   </div>
 
                   <div className="flex-1 min-w-0">
