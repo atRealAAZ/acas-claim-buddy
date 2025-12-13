@@ -2,17 +2,18 @@ import { useState } from 'react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { StepIntroduction } from './StepIntroduction';
 import { StepChooseOptions } from './StepChooseOptions';
+import { StepDateCheck } from './StepDateCheck';
 import { StepSignUp } from './StepSignUp';
 import { Timeline } from './Timeline';
 import { useAuth } from '@/hooks/useAuth';
 
-const STEP_LABELS = ['Introduction', 'Options', 'Sign Up'];
+const STEP_LABELS = ['Introduction', 'Options', 'Date Check', 'Sign Up'];
 
 export function ACASWizard() {
   const [currentStep, setCurrentStep] = useState(1);
   const { user, loading } = useAuth();
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   // Show loading state
@@ -41,7 +42,7 @@ export function ACASWizard() {
         <div className="mb-8">
           <ProgressIndicator
             currentStep={currentStep}
-            totalSteps={3}
+            totalSteps={4}
             labels={STEP_LABELS}
           />
         </div>
@@ -55,6 +56,10 @@ export function ACASWizard() {
         )}
 
         {currentStep === 3 && (
+          <StepDateCheck onBack={prevStep} onNext={nextStep} />
+        )}
+
+        {currentStep === 4 && (
           <StepSignUp onBack={prevStep} onNext={() => {}} />
         )}
       </div>
