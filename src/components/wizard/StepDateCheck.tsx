@@ -64,42 +64,19 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
         <Card className="bg-primary/10 border-primary/20 max-w-md w-full">
           <CardContent className="pt-8 pb-8 px-6 text-center space-y-6">
             <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto">
-              <ExternalLink className="w-6 h-6 text-primary" />
+              <Calendar className="w-6 h-6 text-primary" />
             </div>
             <h2 className="text-xl font-semibold text-foreground">
-              You're within the time limit
+              You're potentially eligible
             </h2>
-            <div className="space-y-4 text-left">
-              <p className="text-muted-foreground">
-                To start the ACAS Early Conciliation process, you'll need to complete their official form.
-              </p>
-              <div className="bg-background/50 rounded-lg p-4 space-y-2">
-                <p className="text-sm font-medium text-foreground">What you'll need:</p>
-                <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-                  <li>Your name and contact details</li>
-                  <li>Your employer's name and address</li>
-                  <li>Brief details of your complaint</li>
-                </ul>
-              </div>
-            </div>
-            <a
-              href="https://www.acas.org.uk/notify/wizard/individual/form"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-            >
-              <Button size="lg" className="w-full text-lg py-6">
-                Go to ACAS Form
-                <ExternalLink className="w-4 h-4 ml-2" />
-              </Button>
-            </a>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="w-full text-lg py-6 mt-3"
-              onClick={onNext}
-            >
-              I submitted the form
+            <p className="text-muted-foreground">
+              Based on the date you provided, you're within the time limit to start an ACAS Early Conciliation claim.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Create an account to save your progress and continue with the process.
+            </p>
+            <Button size="lg" className="w-full text-lg py-6" onClick={onNext}>
+              Create an account
             </Button>
           </CardContent>
         </Card>
