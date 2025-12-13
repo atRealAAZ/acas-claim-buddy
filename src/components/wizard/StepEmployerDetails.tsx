@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { ArrowLeft, ArrowRight, Building2, Info } from 'lucide-react';
 import { EmployerDetails } from '@/types/wizard';
 
 interface StepEmployerDetailsProps {
@@ -17,7 +18,7 @@ export function StepEmployerDetails({ data, onChange, onNext, onBack }: StepEmpl
     onChange({ ...data, [field]: value });
   };
 
-  const isValid = data.legalName.trim() && data.addressLine1.trim() && data.city.trim() && data.postcode.trim();
+  const isValid = data.name.trim() && data.address.trim();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,96 +26,62 @@ export function StepEmployerDetails({ data, onChange, onNext, onBack }: StepEmpl
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="text-center space-y-2">
-        <h2 className="text-xl sm:text-2xl font-semibold text-foreground">Employer Details</h2>
+    <div className="min-h-[80vh] flex flex-col px-6 py-8 animate-in fade-in duration-500">
+      <div className="text-center space-y-2 mb-6">
+        <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+          <Building2 className="w-6 h-6 text-primary" />
+        </div>
+        <h2 className="text-xl font-semibold text-foreground">About your employer</h2>
         <p className="text-muted-foreground text-sm">
-          Provide the legal name and address of your employer.
+          We need their legal name and address for ACAS.
         </p>
       </div>
 
-      <Card className="border-primary/20 bg-primary/5">
-        <CardContent className="pt-4">
+      <Card className="bg-muted/50 border-muted mb-4">
+        <CardContent className="pt-4 pb-4">
           <div className="flex gap-3">
             <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <p className="text-sm text-muted-foreground">
-              <strong className="text-foreground">Tip:</strong> The legal name is usually found on your employment contract, payslips, or the company's Companies House registration. It may differ from the trading name.
+              The legal name is usually on your payslips or contract. It may differ from the trading name.
             </p>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg">Employer Information</CardTitle>
-          <CardDescription>
-            ACAS will use this to contact your employer about conciliation.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+      <Card className="bg-primary/5 border-primary/20 flex-1">
+        <CardContent className="pt-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="legalName">Employer's Legal Name *</Label>
+              <Label htmlFor="employerName" className="text-foreground">Employer Name</Label>
               <Input
-                id="legalName"
-                placeholder="e.g., ABC Company Ltd"
-                value={data.legalName}
-                onChange={(e) => updateField('legalName', e.target.value)}
+                id="employerName"
+                placeholder="e.g. ABC Company Ltd"
+                value={data.name}
+                onChange={(e) => updateField('name', e.target.value)}
+                className="bg-background border-border focus:border-primary"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="empAddressLine1">Address Line 1 *</Label>
-              <Input
-                id="empAddressLine1"
-                placeholder="Street address"
-                value={data.addressLine1}
-                onChange={(e) => updateField('addressLine1', e.target.value)}
+              <Label htmlFor="employerAddress" className="text-foreground">Employer Address</Label>
+              <Textarea
+                id="employerAddress"
+                placeholder="e.g. 100 Business Park, London, EC1A 1BB"
+                value={data.address}
+                onChange={(e) => updateField('address', e.target.value)}
+                className="bg-background border-border focus:border-primary min-h-[80px] resize-none"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="empAddressLine2">Address Line 2</Label>
-              <Input
-                id="empAddressLine2"
-                placeholder="Building, floor, etc. (optional)"
-                value={data.addressLine2}
-                onChange={(e) => updateField('addressLine2', e.target.value)}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="empCity">City *</Label>
-                <Input
-                  id="empCity"
-                  placeholder="City"
-                  value={data.city}
-                  onChange={(e) => updateField('city', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="empPostcode">Postcode *</Label>
-                <Input
-                  id="empPostcode"
-                  placeholder="Postcode"
-                  value={data.postcode}
-                  onChange={(e) => updateField('postcode', e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <Button type="button" variant="outline" onClick={onBack}>
+            <div className="flex justify-between pt-6">
+              <Button type="button" variant="ghost" onClick={onBack} className="text-muted-foreground">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
-              <Button type="submit" disabled={!isValid}>
-                Review Details
+              <Button type="submit" disabled={!isValid} size="lg">
+                Review
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
