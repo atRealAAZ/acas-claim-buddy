@@ -1,74 +1,77 @@
 import { useState } from 'react';
-import { Check, Circle, ChevronDown, ChevronRight } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 
-interface ActionItem {
-  id: string;
-  label: string;
-  description?: string;
+interface FormData {
+  // Personal details
+  fullName: string;
+  address: string;
+  email: string;
+  phone: string;
+  // Employer details
+  employerName: string;
+  employerAddress: string;
+  // Employment details
+  employmentStartDate: string;
+  employmentEndDate: string;
+  jobTitle: string;
+  weeklyPay: string;
+  noticePeriod: string;
+  // ACAS specific
+  complaintSummary: string;
+  // ET1 specific
+  acasCertificateNumber: string;
+  claimType: string;
+  detailedComplaint: string;
+  // ET3 specific
+  et3ResponseNotes: string;
 }
 
-interface Stage {
-  id: string;
-  title: string;
-  description: string;
-  actions: ActionItem[];
-}
-
-const STAGES: Stage[] = [
-  {
-    id: 'acas',
-    title: 'ACAS Pre-conciliation Form',
-    description: 'Submit Early Conciliation notification to ACAS',
-    actions: [
-      { id: 'acas-1', label: 'Gather employment details', description: 'Dates, pay, employer info' },
-      { id: 'acas-2', label: 'Submit ACAS Early Conciliation form online' },
-      { id: 'acas-3', label: 'Receive ACAS Certificate number' },
-      { id: 'acas-4', label: 'Note certificate expiry date (1 month deadline)' },
-    ],
-  },
-  {
-    id: 'et1',
-    title: 'ET1 Form',
-    description: 'Submit your Employment Tribunal claim',
-    actions: [
-      { id: 'et1-1', label: 'Prepare Grounds of Complaint' },
-      { id: 'et1-2', label: 'Gather supporting documents' },
-      { id: 'et1-3', label: 'Complete ET1 form online' },
-      { id: 'et1-4', label: 'Submit ET1 before deadline' },
-      { id: 'et1-5', label: 'Receive confirmation from Tribunal' },
-    ],
-  },
-  {
-    id: 'et3',
-    title: 'ET3 Response',
-    description: 'Employer response and case management',
-    actions: [
-      { id: 'et3-1', label: 'Wait for employer response (28 days)' },
-      { id: 'et3-2', label: 'Review ET3 response from employer' },
-      { id: 'et3-3', label: 'Prepare for preliminary hearing' },
-      { id: 'et3-4', label: 'Upload relevant case documents' },
-    ],
-  },
-];
+const initialFormData: FormData = {
+  fullName: '',
+  address: '',
+  email: '',
+  phone: '',
+  employerName: '',
+  employerAddress: '',
+  employmentStartDate: '',
+  employmentEndDate: '',
+  jobTitle: '',
+  weeklyPay: '',
+  noticePeriod: '',
+  complaintSummary: '',
+  acasCertificateNumber: '',
+  claimType: '',
+  detailedComplaint: '',
+  et3ResponseNotes: '',
+};
 
 export function Timeline() {
   const { signOut, user } = useAuth();
-  const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
   const [expandedStages, setExpandedStages] = useState<Set<string>>(new Set(['acas']));
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [generatedForms, setGeneratedForms] = useState<{ acas?: string; et1?: string }>({});
+  const [isGenerating, setIsGenerating] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
+  const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: File[] }>({});
 
-  const toggleAction = (actionId: string) => {
-    setCompletedActions((prev) => {
-      const next = new Set(prev);
-      if (next.has(actionId)) {
-        next.delete(actionId);
-      } else {
-        next.add(actionId);
-      }
-      return next;
-    });
+  const updateFormData = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleFileUpload = (stageId: string, files: FileList | null) => {
+    if (files) {
+      setUploadedFiles(prev => ({
+        ...prev,
+        [stageId]: [...(prev[stageId] || []), ...Array.from(files)]
+      }));
+      toast.success(`${files.length} file(s) uploaded`);
+    }
   };
 
   const toggleStage = (stageId: string) => {
@@ -83,14 +86,43 @@ export function Timeline() {
     });
   };
 
-  const getStageProgress = (stage: Stage) => {
-    const completed = stage.actions.filter((a) => completedActions.has(a.id)).length;
-    return { completed, total: stage.actions.length };
+  const generateForm = async (formType: 'acas' | 'et1') => {
+    setIsGenerating(prev => ({ ...prev, [formType]: true }));
+    
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-form`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ formType, formData }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate form');
+      }
+
+      const data = await response.json();
+      setGeneratedForms(prev => ({ ...prev, [formType]: data.generatedForm }));
+      toast.success(`${formType.toUpperCase()} form generated successfully!`);
+    } catch (error) {
+      console.error('Error generating form:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to generate form');
+    } finally {
+      setIsGenerating(prev => ({ ...prev, [formType]: false }));
+    }
   };
 
-  const isStageComplete = (stage: Stage) => {
-    return stage.actions.every((a) => completedActions.has(a.id));
-  };
+  const stages = [
+    { id: 'acas', title: 'ACAS Pre-conciliation Form', description: 'Submit Early Conciliation notification to ACAS' },
+    { id: 'et1', title: 'ET1 Form', description: 'Submit your Employment Tribunal claim' },
+    { id: 'et3', title: 'ET3 Response', description: 'Employer response and case management' },
+  ];
 
   return (
     <div className="space-y-6">
@@ -98,7 +130,7 @@ export function Timeline() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Your Case Timeline</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Track your progress through each stage
+            Fill in your details and generate your forms
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={signOut}>
@@ -107,50 +139,27 @@ export function Timeline() {
       </div>
 
       <div className="space-y-4">
-        {STAGES.map((stage, index) => {
-          const progress = getStageProgress(stage);
-          const isComplete = isStageComplete(stage);
+        {stages.map((stage, index) => {
           const isExpanded = expandedStages.has(stage.id);
 
           return (
             <div key={stage.id} className="relative">
-              {/* Connector line */}
-              {index < STAGES.length - 1 && (
-                <div
-                  className={cn(
-                    'absolute left-5 top-14 w-0.5 h-[calc(100%-2rem)]',
-                    isComplete ? 'bg-primary' : 'bg-border'
-                  )}
-                />
+              {index < stages.length - 1 && (
+                <div className="absolute left-5 top-14 w-0.5 h-[calc(100%-2rem)] bg-border" />
               )}
 
               <div className="bg-card rounded-xl border border-border overflow-hidden">
-                {/* Stage header */}
                 <button
                   onClick={() => toggleStage(stage.id)}
                   className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors text-left"
                 >
-                  <div
-                    className={cn(
-                      'w-10 h-10 rounded-full flex items-center justify-center shrink-0',
-                      isComplete
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground'
-                    )}
-                  >
-                    {isComplete ? (
-                      <Check className="w-5 h-5" />
-                    ) : (
-                      <span className="font-semibold">{index + 1}</span>
-                    )}
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-muted text-muted-foreground">
+                    <span className="font-semibold">{index + 1}</span>
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <h2 className="font-semibold text-foreground">{stage.title}</h2>
                     <p className="text-sm text-muted-foreground">{stage.description}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {progress.completed} of {progress.total} completed
-                    </p>
                   </div>
 
                   {isExpanded ? (
@@ -160,48 +169,338 @@ export function Timeline() {
                   )}
                 </button>
 
-                {/* Stage actions */}
                 {isExpanded && (
-                  <div className="border-t border-border px-4 py-3 space-y-2">
-                    {stage.actions.map((action) => {
-                      const isChecked = completedActions.has(action.id);
+                  <div className="border-t border-border px-4 py-4 space-y-4">
+                    {/* ACAS Form Fields */}
+                    {stage.id === 'acas' && (
+                      <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="fullName">Full Name</Label>
+                            <Input
+                              id="fullName"
+                              value={formData.fullName}
+                              onChange={(e) => updateFormData('fullName', e.target.value)}
+                              placeholder="Your full name"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="phone">Phone Number</Label>
+                            <Input
+                              id="phone"
+                              value={formData.phone}
+                              onChange={(e) => updateFormData('phone', e.target.value)}
+                              placeholder="Your phone number"
+                            />
+                          </div>
+                        </div>
 
-                      return (
-                        <button
-                          key={action.id}
-                          onClick={() => toggleAction(action.id)}
-                          className="w-full flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors text-left"
+                        <div className="space-y-2">
+                          <Label htmlFor="address">Address</Label>
+                          <Textarea
+                            id="address"
+                            value={formData.address}
+                            onChange={(e) => updateFormData('address', e.target.value)}
+                            placeholder="Your full address"
+                            rows={2}
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="employerName">Employer Name</Label>
+                            <Input
+                              id="employerName"
+                              value={formData.employerName}
+                              onChange={(e) => updateFormData('employerName', e.target.value)}
+                              placeholder="Employer's name"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="jobTitle">Job Title</Label>
+                            <Input
+                              id="jobTitle"
+                              value={formData.jobTitle}
+                              onChange={(e) => updateFormData('jobTitle', e.target.value)}
+                              placeholder="Your job title"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="employerAddress">Employer Address</Label>
+                          <Textarea
+                            id="employerAddress"
+                            value={formData.employerAddress}
+                            onChange={(e) => updateFormData('employerAddress', e.target.value)}
+                            placeholder="Employer's full address"
+                            rows={2}
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="employmentStartDate">Employment Start Date</Label>
+                            <Input
+                              id="employmentStartDate"
+                              type="date"
+                              value={formData.employmentStartDate}
+                              onChange={(e) => updateFormData('employmentStartDate', e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="employmentEndDate">Employment End Date</Label>
+                            <Input
+                              id="employmentEndDate"
+                              type="date"
+                              value={formData.employmentEndDate}
+                              onChange={(e) => updateFormData('employmentEndDate', e.target.value)}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="complaintSummary">Complaint Summary</Label>
+                          <Textarea
+                            id="complaintSummary"
+                            value={formData.complaintSummary}
+                            onChange={(e) => updateFormData('complaintSummary', e.target.value)}
+                            placeholder="Briefly describe your complaint (e.g., unfair dismissal, discrimination)"
+                            rows={4}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Upload Supporting Documents</Label>
+                          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
+                            <input
+                              type="file"
+                              multiple
+                              className="hidden"
+                              id="acas-upload"
+                              onChange={(e) => handleFileUpload('acas', e.target.files)}
+                            />
+                            <label htmlFor="acas-upload" className="cursor-pointer">
+                              <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
+                              <p className="text-sm text-muted-foreground">Click to upload documents</p>
+                            </label>
+                            {uploadedFiles['acas']?.length > 0 && (
+                              <div className="mt-2 text-sm text-primary">
+                                {uploadedFiles['acas'].length} file(s) uploaded
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <Button
+                          onClick={() => generateForm('acas')}
+                          disabled={isGenerating.acas}
+                          className="w-full"
+                          size="lg"
                         >
-                          <div
-                            className={cn(
-                              'w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors',
-                              isChecked
-                                ? 'bg-primary border-primary text-primary-foreground'
-                                : 'border-muted-foreground'
-                            )}
-                          >
-                            {isChecked && <Check className="w-3 h-3" />}
+                          {isGenerating.acas ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Generating...
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-4 h-4 mr-2" />
+                              Generate ACAS Form
+                            </>
+                          )}
+                        </Button>
+
+                        {generatedForms.acas && (
+                          <div className="mt-4 p-4 bg-muted rounded-lg">
+                            <div className="flex items-center gap-2 mb-2">
+                              <FileText className="w-4 h-4 text-primary" />
+                              <h3 className="font-semibold text-foreground">Generated ACAS Form</h3>
+                            </div>
+                            <pre className="whitespace-pre-wrap text-sm text-foreground bg-background p-4 rounded border border-border overflow-auto max-h-96">
+                              {generatedForms.acas}
+                            </pre>
                           </div>
-                          <div>
-                            <p
-                              className={cn(
-                                'text-sm',
-                                isChecked
-                                  ? 'text-muted-foreground line-through'
-                                  : 'text-foreground'
-                              )}
-                            >
-                              {action.label}
-                            </p>
-                            {action.description && (
-                              <p className="text-xs text-muted-foreground">
-                                {action.description}
-                              </p>
+                        )}
+                      </>
+                    )}
+
+                    {/* ET1 Form Fields */}
+                    {stage.id === 'et1' && (
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="acasCertificateNumber">ACAS Certificate Number</Label>
+                          <Input
+                            id="acasCertificateNumber"
+                            value={formData.acasCertificateNumber}
+                            onChange={(e) => updateFormData('acasCertificateNumber', e.target.value)}
+                            placeholder="R123456/78/90"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="weeklyPay">Weekly Pay (£)</Label>
+                            <Input
+                              id="weeklyPay"
+                              value={formData.weeklyPay}
+                              onChange={(e) => updateFormData('weeklyPay', e.target.value)}
+                              placeholder="e.g., 500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="noticePeriod">Notice Period</Label>
+                            <Input
+                              id="noticePeriod"
+                              value={formData.noticePeriod}
+                              onChange={(e) => updateFormData('noticePeriod', e.target.value)}
+                              placeholder="e.g., 1 month"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="claimType">Type of Claim</Label>
+                          <Input
+                            id="claimType"
+                            value={formData.claimType}
+                            onChange={(e) => updateFormData('claimType', e.target.value)}
+                            placeholder="e.g., Unfair dismissal, Discrimination"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="detailedComplaint">Detailed Grounds of Complaint</Label>
+                          <Textarea
+                            id="detailedComplaint"
+                            value={formData.detailedComplaint}
+                            onChange={(e) => updateFormData('detailedComplaint', e.target.value)}
+                            placeholder="Provide a detailed account of what happened, including dates, people involved, and how you were affected"
+                            rows={6}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Upload Evidence Documents</Label>
+                          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
+                            <input
+                              type="file"
+                              multiple
+                              className="hidden"
+                              id="et1-upload"
+                              onChange={(e) => handleFileUpload('et1', e.target.files)}
+                            />
+                            <label htmlFor="et1-upload" className="cursor-pointer">
+                              <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
+                              <p className="text-sm text-muted-foreground">Upload contracts, emails, or other evidence</p>
+                            </label>
+                            {uploadedFiles['et1']?.length > 0 && (
+                              <div className="mt-2 text-sm text-primary">
+                                {uploadedFiles['et1'].length} file(s) uploaded
+                              </div>
                             )}
                           </div>
-                        </button>
-                      );
-                    })}
+                        </div>
+
+                        <Button
+                          onClick={() => generateForm('et1')}
+                          disabled={isGenerating.et1}
+                          className="w-full"
+                          size="lg"
+                        >
+                          {isGenerating.et1 ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Generating...
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-4 h-4 mr-2" />
+                              Generate ET1 Form
+                            </>
+                          )}
+                        </Button>
+
+                        {generatedForms.et1 && (
+                          <div className="mt-4 p-4 bg-muted rounded-lg">
+                            <div className="flex items-center gap-2 mb-2">
+                              <FileText className="w-4 h-4 text-primary" />
+                              <h3 className="font-semibold text-foreground">Generated ET1 Form</h3>
+                            </div>
+                            <pre className="whitespace-pre-wrap text-sm text-foreground bg-background p-4 rounded border border-border overflow-auto max-h-96">
+                              {generatedForms.et1}
+                            </pre>
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {/* ET3 Response Fields */}
+                    {stage.id === 'et3' && (
+                      <>
+                        <div className="p-4 bg-muted/50 rounded-lg mb-4">
+                          <p className="text-sm text-muted-foreground">
+                            After submitting your ET1 form, you'll need to wait for your employer's response (ET3). 
+                            They have 28 days to respond. Use this section to upload and review their response.
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Upload ET3 Response from Employer</Label>
+                          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
+                            <input
+                              type="file"
+                              multiple
+                              className="hidden"
+                              id="et3-upload"
+                              onChange={(e) => handleFileUpload('et3', e.target.files)}
+                            />
+                            <label htmlFor="et3-upload" className="cursor-pointer">
+                              <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
+                              <p className="text-sm text-muted-foreground">Upload your employer's ET3 response</p>
+                            </label>
+                            {uploadedFiles['et3']?.length > 0 && (
+                              <div className="mt-2 text-sm text-primary">
+                                {uploadedFiles['et3'].length} file(s) uploaded
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="et3ResponseNotes">Notes on Employer's Response</Label>
+                          <Textarea
+                            id="et3ResponseNotes"
+                            value={formData.et3ResponseNotes}
+                            onChange={(e) => updateFormData('et3ResponseNotes', e.target.value)}
+                            placeholder="Make notes about your employer's response, including any points you disagree with or want to address"
+                            rows={4}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Upload Case Documents</Label>
+                          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
+                            <input
+                              type="file"
+                              multiple
+                              className="hidden"
+                              id="case-docs-upload"
+                              onChange={(e) => handleFileUpload('case-docs', e.target.files)}
+                            />
+                            <label htmlFor="case-docs-upload" className="cursor-pointer">
+                              <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
+                              <p className="text-sm text-muted-foreground">Upload additional case documents for your hearing</p>
+                            </label>
+                            {uploadedFiles['case-docs']?.length > 0 && (
+                              <div className="mt-2 text-sm text-primary">
+                                {uploadedFiles['case-docs'].length} file(s) uploaded
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
