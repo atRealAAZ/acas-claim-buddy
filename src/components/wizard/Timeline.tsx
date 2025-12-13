@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { GreenPTFloatingChat } from '@/components/GreenPTFloatingChat';
 
 interface FormData {
   // Personal details
@@ -614,6 +615,8 @@ export function Timeline() {
           );
         })}
       </div>
+      
+      <GreenPTFloatingChat formData={formData} />
     </div>
   );
 }
