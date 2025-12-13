@@ -1,19 +1,14 @@
 import { useState } from 'react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { StepIntroduction } from './StepIntroduction';
-import { StepUserDetails } from './StepUserDetails';
-import { StepEmployerDetails } from './StepEmployerDetails';
-import { StepReview } from './StepReview';
-import { WizardData, initialWizardData } from '@/types/wizard';
+import { StepDateCheck } from './StepDateCheck';
 
-const STEP_LABELS = ['Introduction', 'Your Details', 'Employer', 'Review'];
+const STEP_LABELS = ['Introduction', 'Check Date'];
 
 export function ACASWizard() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [wizardData, setWizardData] = useState<WizardData>(initialWizardData);
 
-  const goToStep = (step: number) => setCurrentStep(step);
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 2));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   return (
@@ -22,7 +17,7 @@ export function ACASWizard() {
         <div className="mb-8">
           <ProgressIndicator
             currentStep={currentStep}
-            totalSteps={4}
+            totalSteps={2}
             labels={STEP_LABELS}
           />
         </div>
@@ -32,29 +27,7 @@ export function ACASWizard() {
         )}
 
         {currentStep === 2 && (
-          <StepUserDetails
-            data={wizardData.userDetails}
-            onChange={(userDetails) => setWizardData((prev) => ({ ...prev, userDetails }))}
-            onNext={nextStep}
-            onBack={prevStep}
-          />
-        )}
-
-        {currentStep === 3 && (
-          <StepEmployerDetails
-            data={wizardData.employerDetails}
-            onChange={(employerDetails) => setWizardData((prev) => ({ ...prev, employerDetails }))}
-            onNext={nextStep}
-            onBack={prevStep}
-          />
-        )}
-
-        {currentStep === 4 && (
-          <StepReview
-            data={wizardData}
-            onBack={prevStep}
-            onEdit={goToStep}
-          />
+          <StepDateCheck onBack={prevStep} />
         )}
       </div>
     </div>
