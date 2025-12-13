@@ -2,3 +2,6 @@ project_id = "fsvggjkqrxymsxqvgdjf"
 
 [functions.generate-form]
 verify_jwt = false
+
+[functions.greenpt-chat]
+verify_jwt = false
