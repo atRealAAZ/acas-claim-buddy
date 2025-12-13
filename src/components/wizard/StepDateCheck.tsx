@@ -7,9 +7,10 @@ import { ArrowLeft, Calendar, ExternalLink, AlertCircle } from 'lucide-react';
 
 interface StepDateCheckProps {
   onBack: () => void;
+  onNext: () => void;
 }
 
-export function StepDateCheck({ onBack }: StepDateCheckProps) {
+export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
   const [date, setDate] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
@@ -92,6 +93,14 @@ export function StepDateCheck({ onBack }: StepDateCheckProps) {
                 <ExternalLink className="w-4 h-4 ml-2" />
               </Button>
             </a>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="w-full text-lg py-6 mt-3"
+              onClick={onNext}
+            >
+              I submitted the form
+            </Button>
           </CardContent>
         </Card>
         <div className="w-full max-w-md mt-6">
