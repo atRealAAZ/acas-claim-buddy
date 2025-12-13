@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2 } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -57,6 +57,7 @@ export function Timeline() {
   const [expandedStages, setExpandedStages] = useState<Set<string>>(new Set(['acas']));
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [generatedForms, setGeneratedForms] = useState<{ acas?: string; et1?: string }>({});
+  const [acceptedForms, setAcceptedForms] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [isGenerating, setIsGenerating] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: File[] }>({});
 
@@ -312,14 +313,39 @@ export function Timeline() {
                         </Button>
 
                         {generatedForms.acas && (
-                          <div className="mt-4 p-4 bg-muted rounded-lg">
-                            <div className="flex items-center gap-2 mb-2">
-                              <FileText className="w-4 h-4 text-primary" />
-                              <h3 className="font-semibold text-foreground">Generated ACAS Form</h3>
+                          <div className="mt-4 p-6 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+                            <div className="flex items-center justify-between mb-4">
+                              <div className="flex items-center gap-2">
+                                <FileText className="w-5 h-5 text-primary" />
+                                <h3 className="text-lg font-semibold text-foreground">Generated ACAS Form</h3>
+                              </div>
+                              {acceptedForms.acas && (
+                                <div className="flex items-center gap-1 text-green-600 text-sm font-medium">
+                                  <CheckCircle2 className="w-4 h-4" />
+                                  Accepted
+                                </div>
+                              )}
                             </div>
-                            <pre className="whitespace-pre-wrap text-sm text-foreground bg-background p-4 rounded border border-border overflow-auto max-h-96">
-                              {generatedForms.acas}
-                            </pre>
+                            <Textarea
+                              value={generatedForms.acas}
+                              onChange={(e) => setGeneratedForms(prev => ({ ...prev, acas: e.target.value }))}
+                              className="min-h-[400px] font-serif text-base leading-relaxed bg-background border-border resize-y"
+                              disabled={acceptedForms.acas}
+                            />
+                            {!acceptedForms.acas && (
+                              <Button
+                                onClick={() => {
+                                  setAcceptedForms(prev => ({ ...prev, acas: true }));
+                                  toast.success('ACAS form accepted!');
+                                }}
+                                className="w-full mt-4"
+                                size="lg"
+                                variant="default"
+                              >
+                                <CheckCircle2 className="w-4 h-4 mr-2" />
+                                Accept ACAS Form
+                              </Button>
+                            )}
                           </div>
                         )}
                       </>
@@ -422,14 +448,39 @@ export function Timeline() {
                         </Button>
 
                         {generatedForms.et1 && (
-                          <div className="mt-4 p-4 bg-muted rounded-lg">
-                            <div className="flex items-center gap-2 mb-2">
-                              <FileText className="w-4 h-4 text-primary" />
-                              <h3 className="font-semibold text-foreground">Generated ET1 Form</h3>
+                          <div className="mt-4 p-6 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+                            <div className="flex items-center justify-between mb-4">
+                              <div className="flex items-center gap-2">
+                                <FileText className="w-5 h-5 text-primary" />
+                                <h3 className="text-lg font-semibold text-foreground">Generated ET1 Form</h3>
+                              </div>
+                              {acceptedForms.et1 && (
+                                <div className="flex items-center gap-1 text-green-600 text-sm font-medium">
+                                  <CheckCircle2 className="w-4 h-4" />
+                                  Accepted
+                                </div>
+                              )}
                             </div>
-                            <pre className="whitespace-pre-wrap text-sm text-foreground bg-background p-4 rounded border border-border overflow-auto max-h-96">
-                              {generatedForms.et1}
-                            </pre>
+                            <Textarea
+                              value={generatedForms.et1}
+                              onChange={(e) => setGeneratedForms(prev => ({ ...prev, et1: e.target.value }))}
+                              className="min-h-[500px] font-serif text-base leading-relaxed bg-background border-border resize-y"
+                              disabled={acceptedForms.et1}
+                            />
+                            {!acceptedForms.et1 && (
+                              <Button
+                                onClick={() => {
+                                  setAcceptedForms(prev => ({ ...prev, et1: true }));
+                                  toast.success('ET1 form accepted!');
+                                }}
+                                className="w-full mt-4"
+                                size="lg"
+                                variant="default"
+                              >
+                                <CheckCircle2 className="w-4 h-4 mr-2" />
+                                Accept ET1 Form
+                              </Button>
+                            )}
                           </div>
                         )}
                       </>
