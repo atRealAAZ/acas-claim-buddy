@@ -210,12 +210,33 @@ export function Timeline() {
                             />
                           </div>
                           <div className="space-y-2">
+                            <Label htmlFor="employerAddress">Employer Address</Label>
+                            <Input
+                              id="employerAddress"
+                              value={formData.employerAddress}
+                              onChange={(e) => updateFormData('employerAddress', e.target.value)}
+                              placeholder="Employer's address"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
                             <Label htmlFor="employmentEndDate">Termination Date</Label>
                             <Input
                               id="employmentEndDate"
                               type="date"
                               value={formData.employmentEndDate}
                               onChange={(e) => updateFormData('employmentEndDate', e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="claimType">Claim Type</Label>
+                            <Input
+                              id="claimType"
+                              value={formData.claimType}
+                              onChange={(e) => updateFormData('claimType', e.target.value)}
+                              placeholder="e.g., Unfair dismissal, Discrimination"
                             />
                           </div>
                         </div>
