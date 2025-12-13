@@ -4,13 +4,15 @@ import { StepIntroduction } from './StepIntroduction';
 import { StepChooseOptions } from './StepChooseOptions';
 import { StepDateCheck } from './StepDateCheck';
 import { StepET1Claim } from './StepET1Claim';
+import { StepWaitingResponse } from './StepWaitingResponse';
+import { StepCaseManagement } from './StepCaseManagement';
 
-const STEP_LABELS = ['Introduction', 'Options', 'ACAS Form', 'ET1 Claim'];
+const STEP_LABELS = ['Introduction', 'Options', 'ACAS Form', 'ET1 Claim', 'Waiting', 'Case'];
 
 export function ACASWizard() {
   const [currentStep, setCurrentStep] = useState(1);
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 6));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   return (
@@ -19,7 +21,7 @@ export function ACASWizard() {
         <div className="mb-8">
           <ProgressIndicator
             currentStep={currentStep}
-            totalSteps={4}
+            totalSteps={6}
             labels={STEP_LABELS}
           />
         </div>
@@ -37,7 +39,15 @@ export function ACASWizard() {
         )}
 
         {currentStep === 4 && (
-          <StepET1Claim onBack={prevStep} />
+          <StepET1Claim onBack={prevStep} onNext={nextStep} />
+        )}
+
+        {currentStep === 5 && (
+          <StepWaitingResponse onBack={prevStep} onNext={nextStep} />
+        )}
+
+        {currentStep === 6 && (
+          <StepCaseManagement onBack={prevStep} />
         )}
       </div>
     </div>
