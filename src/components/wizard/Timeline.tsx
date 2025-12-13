@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { GreenPTFloatingChat } from '@/components/GreenPTFloatingChat';
+import { MeditationWidget } from '@/components/MeditationWidget';
 
 interface FormData {
   // Personal details
@@ -200,7 +201,24 @@ export function Timeline() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h2 className="font-semibold text-foreground">{stage.title}</h2>
+                    <div className="flex items-center gap-3">
+                      <h2 className="font-semibold text-foreground">{stage.title}</h2>
+                      {stage.deadline && !isStageComplete(stage.id) && (
+                        <div className={cn(
+                          "px-2 py-0.5 rounded-full text-xs font-bold",
+                          stage.deadline.isPast 
+                            ? "bg-red-500/20 text-red-600" 
+                            : stage.deadline.isUrgent 
+                              ? "bg-orange-500/20 text-orange-600" 
+                              : "bg-primary/10 text-primary"
+                        )}>
+                          {stage.deadline.isPast 
+                            ? `${Math.abs(stage.deadline.daysRemaining)}d overdue`
+                            : `${stage.deadline.daysRemaining}d left`
+                          }
+                        </div>
+                      )}
+                    </div>
                     <p className="text-sm text-muted-foreground">{stage.description}</p>
                     {stage.deadline && (
                       <div className={cn(
@@ -209,11 +227,7 @@ export function Timeline() {
                       )}>
                         <Clock className="w-3 h-3" />
                         <span>
-                          Deadline: {format(stage.deadline.date, 'dd MMM yyyy')} 
-                          {stage.deadline.isPast 
-                            ? ` (${Math.abs(stage.deadline.daysRemaining)} days overdue)`
-                            : ` (${stage.deadline.daysRemaining} days remaining)`
-                          }
+                          Deadline: {format(stage.deadline.date, 'dd MMM yyyy')}
                         </span>
                       </div>
                     )}
@@ -545,6 +559,10 @@ export function Timeline() {
                     {/* ET3 Response Fields */}
                     {stage.id === 'et3' && (
                       <>
+                        <div className="mb-4">
+                          <MeditationWidget />
+                        </div>
+
                         <div className="p-4 bg-muted/50 rounded-lg mb-4">
                           <p className="text-sm text-muted-foreground">
                             After submitting your ET1 form, you'll need to wait for your employer's response (ET3). 
