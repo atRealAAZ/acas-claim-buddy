@@ -19,7 +19,26 @@ serve(async (req) => {
       throw new Error('GREENPT_API_KEY is not configured');
     }
 
-    console.log('Calling GreenPT API with messages:', JSON.stringify(messages));
+    // Filter out system messages and prepend context to the first user message
+    // GreenPT's green-l model doesn't support system prompts
+    const systemMessage = messages.find((m: { role: string }) => m.role === 'system');
+    const nonSystemMessages = messages.filter((m: { role: string }) => m.role !== 'system');
+    
+    let processedMessages = nonSystemMessages;
+    if (systemMessage && nonSystemMessages.length > 0) {
+      // Prepend system context to the first user message
+      processedMessages = nonSystemMessages.map((m: { role: string; content: string }, index: number) => {
+        if (index === 0 && m.role === 'user') {
+          return {
+            ...m,
+            content: `[Context: ${systemMessage.content}]\n\nUser question: ${m.content}`
+          };
+        }
+        return m;
+      });
+    }
+
+    console.log('Calling GreenPT API with messages:', JSON.stringify(processedMessages));
 
     const response = await fetch('https://api.greenpt.ai/v1/chat/completions', {
       method: 'POST',
@@ -29,7 +48,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'green-l',
-        messages,
+        messages: processedMessages,
         stream: false,
       }),
     });
