@@ -3,18 +3,37 @@ import { ProgressIndicator } from './ProgressIndicator';
 import { StepIntroduction } from './StepIntroduction';
 import { StepChooseOptions } from './StepChooseOptions';
 import { StepSignUp } from './StepSignUp';
-import { StepDateCheck } from './StepDateCheck';
-import { StepET1Claim } from './StepET1Claim';
-import { StepWaitingResponse } from './StepWaitingResponse';
-import { StepCaseManagement } from './StepCaseManagement';
+import { Timeline } from './Timeline';
+import { useAuth } from '@/hooks/useAuth';
 
-const STEP_LABELS = ['Introduction', 'Options', 'Sign Up', 'ACAS Form', 'ET1 Claim', 'Waiting', 'Case'];
+const STEP_LABELS = ['Introduction', 'Options', 'Sign Up'];
 
 export function ACASWizard() {
   const [currentStep, setCurrentStep] = useState(1);
+  const { user, loading } = useAuth();
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 7));
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  // If user is logged in, show timeline
+  if (user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="max-w-2xl mx-auto px-4 py-6 sm:py-10">
+          <Timeline />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -22,7 +41,7 @@ export function ACASWizard() {
         <div className="mb-8">
           <ProgressIndicator
             currentStep={currentStep}
-            totalSteps={7}
+            totalSteps={3}
             labels={STEP_LABELS}
           />
         </div>
@@ -36,23 +55,7 @@ export function ACASWizard() {
         )}
 
         {currentStep === 3 && (
-          <StepSignUp onBack={prevStep} onNext={nextStep} />
-        )}
-
-        {currentStep === 4 && (
-          <StepDateCheck onBack={prevStep} onNext={nextStep} />
-        )}
-
-        {currentStep === 5 && (
-          <StepET1Claim onBack={prevStep} onNext={nextStep} />
-        )}
-
-        {currentStep === 6 && (
-          <StepWaitingResponse onBack={prevStep} onNext={nextStep} />
-        )}
-
-        {currentStep === 7 && (
-          <StepCaseManagement onBack={prevStep} />
+          <StepSignUp onBack={prevStep} onNext={() => {}} />
         )}
       </div>
     </div>
