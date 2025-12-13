@@ -1,18 +1,12 @@
 export interface UserDetails {
-  fullName: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  postcode: string;
+  name: string;
+  address: string;
   email: string;
 }
 
 export interface EmployerDetails {
-  legalName: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  postcode: string;
+  name: string;
+  address: string;
 }
 
 export interface WizardData {
@@ -22,18 +16,12 @@ export interface WizardData {
 
 export const initialWizardData: WizardData = {
   userDetails: {
-    fullName: '',
-    addressLine1: '',
-    addressLine2: '',
-    city: '',
-    postcode: '',
+    name: '',
+    address: '',
     email: '',
   },
   employerDetails: {
-    legalName: '',
-    addressLine1: '',
-    addressLine2: '',
-    city: '',
-    postcode: '',
+    name: '',
+    address: '',
   },
 };

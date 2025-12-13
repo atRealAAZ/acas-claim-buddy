@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { ArrowLeft, ArrowRight, User } from 'lucide-react';
 import { UserDetails } from '@/types/wizard';
 
 interface StepUserDetailsProps {
@@ -17,7 +18,7 @@ export function StepUserDetails({ data, onChange, onNext, onBack }: StepUserDeta
     onChange({ ...data, [field]: value });
   };
 
-  const isValid = data.fullName.trim() && data.addressLine1.trim() && data.city.trim() && data.postcode.trim() && data.email.trim();
+  const isValid = data.name.trim() && data.address.trim() && data.email.trim();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,96 +26,63 @@ export function StepUserDetails({ data, onChange, onNext, onBack }: StepUserDeta
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="text-center space-y-2">
-        <h2 className="text-xl sm:text-2xl font-semibold text-foreground">Your Details</h2>
+    <div className="min-h-[80vh] flex flex-col px-6 py-8 animate-in fade-in duration-500">
+      <div className="text-center space-y-2 mb-6">
+        <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+          <User className="w-6 h-6 text-primary" />
+        </div>
+        <h2 className="text-xl font-semibold text-foreground">Tell us about you</h2>
         <p className="text-muted-foreground text-sm">
-          Please provide your contact information as it should appear on the ACAS notification.
+          We just need a few details so ACAS can contact you.
         </p>
       </div>
 
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg">Personal Information</CardTitle>
-          <CardDescription>
-            This is how ACAS will contact you about your case.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+      <Card className="bg-primary/5 border-primary/20 flex-1">
+        <CardContent className="pt-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name *</Label>
+              <Label htmlFor="name" className="text-foreground">Your Name</Label>
               <Input
-                id="fullName"
-                placeholder="Enter your full name"
-                value={data.fullName}
-                onChange={(e) => updateField('fullName', e.target.value)}
+                id="name"
+                placeholder="e.g. Sarah Johnson"
+                value={data.name}
+                onChange={(e) => updateField('name', e.target.value)}
+                className="bg-background border-border focus:border-primary"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="addressLine1">Address Line 1 *</Label>
-              <Input
-                id="addressLine1"
-                placeholder="Street address"
-                value={data.addressLine1}
-                onChange={(e) => updateField('addressLine1', e.target.value)}
+              <Label htmlFor="address" className="text-foreground">Your Address</Label>
+              <Textarea
+                id="address"
+                placeholder="e.g. 42 High Street, Manchester, M1 2AB"
+                value={data.address}
+                onChange={(e) => updateField('address', e.target.value)}
+                className="bg-background border-border focus:border-primary min-h-[80px] resize-none"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="addressLine2">Address Line 2</Label>
-              <Input
-                id="addressLine2"
-                placeholder="Apartment, suite, etc. (optional)"
-                value={data.addressLine2}
-                onChange={(e) => updateField('addressLine2', e.target.value)}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="city">City *</Label>
-                <Input
-                  id="city"
-                  placeholder="City"
-                  value={data.city}
-                  onChange={(e) => updateField('city', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="postcode">Postcode *</Label>
-                <Input
-                  id="postcode"
-                  placeholder="Postcode"
-                  value={data.postcode}
-                  onChange={(e) => updateField('postcode', e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address *</Label>
+              <Label htmlFor="email" className="text-foreground">Your Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="your.email@example.com"
+                placeholder="e.g. sarah@email.com"
                 value={data.email}
                 onChange={(e) => updateField('email', e.target.value)}
+                className="bg-background border-border focus:border-primary"
                 required
               />
             </div>
 
-            <div className="flex justify-between pt-4">
-              <Button type="button" variant="outline" onClick={onBack}>
+            <div className="flex justify-between pt-6">
+              <Button type="button" variant="ghost" onClick={onBack} className="text-muted-foreground">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
-              <Button type="submit" disabled={!isValid}>
+              <Button type="submit" disabled={!isValid} size="lg">
                 Continue
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
