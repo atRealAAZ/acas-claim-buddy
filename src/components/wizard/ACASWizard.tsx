@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { StepIntroduction } from './StepIntroduction';
 import { StepChooseOptions } from './StepChooseOptions';
-import { StepDateCheck } from './StepDateCheck';
 import { StepSignUp } from './StepSignUp';
+import { StepDateCheck } from './StepDateCheck';
 import { StepET1Claim } from './StepET1Claim';
 import { StepWaitingResponse } from './StepWaitingResponse';
 import { StepCaseManagement } from './StepCaseManagement';
 
-const STEP_LABELS = ['Introduction', 'Options', 'ACAS Form', 'Sign Up', 'ET1 Claim', 'Waiting', 'Case'];
+const STEP_LABELS = ['Introduction', 'Options', 'Sign Up', 'ACAS Form', 'ET1 Claim', 'Waiting', 'Case'];
 
 export function ACASWizard() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -36,11 +36,11 @@ export function ACASWizard() {
         )}
 
         {currentStep === 3 && (
-          <StepDateCheck onBack={prevStep} onNext={nextStep} />
+          <StepSignUp onBack={prevStep} onNext={nextStep} />
         )}
 
         {currentStep === 4 && (
-          <StepSignUp onBack={prevStep} onNext={nextStep} />
+          <StepDateCheck onBack={prevStep} onNext={nextStep} />
         )}
 
         {currentStep === 5 && (
