@@ -4,9 +4,10 @@ import { ArrowLeft, FileText, ExternalLink, CheckCircle } from 'lucide-react';
 
 interface StepET1ClaimProps {
   onBack: () => void;
+  onNext: () => void;
 }
 
-export function StepET1Claim({ onBack }: StepET1ClaimProps) {
+export function StepET1Claim({ onBack, onNext }: StepET1ClaimProps) {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-6 animate-in fade-in duration-500">
       <Card className="bg-primary/10 border-primary/20 max-w-md w-full">
@@ -63,6 +64,15 @@ export function StepET1Claim({ onBack }: StepET1ClaimProps) {
               <ExternalLink className="w-4 h-4 ml-2" />
             </Button>
           </a>
+
+          <Button 
+            size="lg" 
+            variant="ghost"
+            onClick={onNext}
+            className="w-full text-muted-foreground hover:text-foreground"
+          >
+            I submitted the ET1
+          </Button>
         </CardContent>
       </Card>
       <div className="w-full max-w-md mt-6">
