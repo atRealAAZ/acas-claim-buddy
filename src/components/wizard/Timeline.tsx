@@ -563,6 +563,60 @@ export function Timeline() {
                           <MeditationWidget />
                         </div>
 
+                        {/* Case Summary */}
+                        {(formData.fullName || formData.employerName || formData.claimType) && (
+                          <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg mb-4 space-y-3">
+                            <h3 className="font-semibold text-foreground flex items-center gap-2">
+                              <FileText className="w-4 h-4 text-primary" />
+                              Your Case Details
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                              {formData.fullName && (
+                                <div>
+                                  <span className="text-muted-foreground">Claimant:</span>{' '}
+                                  <span className="text-foreground font-medium">{formData.fullName}</span>
+                                </div>
+                              )}
+                              {formData.email && (
+                                <div>
+                                  <span className="text-muted-foreground">Email:</span>{' '}
+                                  <span className="text-foreground">{formData.email}</span>
+                                </div>
+                              )}
+                              {formData.employerName && (
+                                <div>
+                                  <span className="text-muted-foreground">Employer:</span>{' '}
+                                  <span className="text-foreground font-medium">{formData.employerName}</span>
+                                </div>
+                              )}
+                              {formData.employerAddress && (
+                                <div>
+                                  <span className="text-muted-foreground">Employer Address:</span>{' '}
+                                  <span className="text-foreground">{formData.employerAddress}</span>
+                                </div>
+                              )}
+                              {formData.claimType && (
+                                <div>
+                                  <span className="text-muted-foreground">Claim Type:</span>{' '}
+                                  <span className="text-foreground">{formData.claimType}</span>
+                                </div>
+                              )}
+                              {formData.employmentEndDate && (
+                                <div>
+                                  <span className="text-muted-foreground">Termination Date:</span>{' '}
+                                  <span className="text-foreground">{format(new Date(formData.employmentEndDate), 'dd MMM yyyy')}</span>
+                                </div>
+                              )}
+                              {formData.acasCertificateNumber && (
+                                <div className="md:col-span-2">
+                                  <span className="text-muted-foreground">ACAS Certificate:</span>{' '}
+                                  <span className="text-foreground font-mono">{formData.acasCertificateNumber}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
                         <div className="p-4 bg-muted/50 rounded-lg mb-4">
                           <p className="text-sm text-muted-foreground">
                             After submitting your ET1 form, you'll need to wait for your employer's response (ET3). 
