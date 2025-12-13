@@ -31,7 +31,6 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
           toast.error(error.message);
         } else {
           toast.success('Logged in successfully!');
-          onNext();
         }
       } else {
         const { error } = await signUp(email, password, name);
@@ -39,19 +38,12 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
           toast.error(error.message);
         } else {
           toast.success('Account created successfully!');
-          onNext();
         }
       }
     } finally {
       setLoading(false);
     }
   };
-
-  // If already logged in, skip this step
-  if (user) {
-    onNext();
-    return null;
-  }
 
   return (
     <div className="space-y-6">
