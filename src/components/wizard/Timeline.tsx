@@ -155,7 +155,7 @@ export function Timeline() {
   const stages = [
     { id: 'acas', title: 'ACAS Pre-conciliation Form', description: 'Submit Early Conciliation notification to ACAS', deadline: getDeadlineInfo(deadlines.acas) },
     { id: 'et1', title: 'ET1 Form', description: 'Submit your Employment Tribunal claim', deadline: getDeadlineInfo(deadlines.et1) },
-    { id: 'et3', title: 'ET3 Response', description: 'Employer response and case management', deadline: getDeadlineInfo(deadlines.et3) },
+    { id: 'et3', title: 'Waiting Employer Response', description: 'Wait for your employer\'s ET3 response', deadline: getDeadlineInfo(deadlines.et3) },
   ];
 
   return (
@@ -655,28 +655,6 @@ export function Timeline() {
                             placeholder="Make notes about your employer's response, including any points you disagree with or want to address"
                             rows={4}
                           />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label>Upload Case Documents</Label>
-                          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
-                            <input
-                              type="file"
-                              multiple
-                              className="hidden"
-                              id="case-docs-upload"
-                              onChange={(e) => handleFileUpload('case-docs', e.target.files)}
-                            />
-                            <label htmlFor="case-docs-upload" className="cursor-pointer">
-                              <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
-                              <p className="text-sm text-muted-foreground">Upload additional case documents for your hearing</p>
-                            </label>
-                            {uploadedFiles['case-docs']?.length > 0 && (
-                              <div className="mt-2 text-sm text-primary">
-                                {uploadedFiles['case-docs'].length} file(s) uploaded
-                              </div>
-                            )}
-                          </div>
                         </div>
                       </>
                     )}
