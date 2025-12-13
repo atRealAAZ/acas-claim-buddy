@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2, CheckCircle2, Send } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2, CheckCircle2, Send, Clock } from 'lucide-react';
+import { addMonths, addDays, format, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,7 @@ interface FormData {
   acasCertificateNumber: string;
   claimType: string;
   detailedComplaint: string;
+  desiredOutcome: string;
   // ET3 specific
   et3ResponseNotes: string;
 }
@@ -49,6 +51,7 @@ const initialFormData: FormData = {
   acasCertificateNumber: '',
   claimType: '',
   detailedComplaint: '',
+  desiredOutcome: '',
   et3ResponseNotes: '',
 };
 
@@ -121,10 +124,29 @@ export function Timeline() {
     }
   };
 
+  // Calculate deadlines based on termination date
+  const getDeadlines = () => {
+    if (!formData.employmentEndDate) return { acas: null, et1: null };
+    const terminationDate = new Date(formData.employmentEndDate);
+    const acasDeadline = addDays(addMonths(terminationDate, 3), -1); // 3 months minus 1 day
+    const et1Deadline = addMonths(acasDeadline, 1); // 1 month after ACAS
+    return { acas: acasDeadline, et1: et1Deadline };
+  };
+
+  const deadlines = getDeadlines();
+
+  const getDeadlineInfo = (deadline: Date | null) => {
+    if (!deadline) return null;
+    const daysRemaining = differenceInDays(deadline, new Date());
+    const isUrgent = daysRemaining <= 14;
+    const isPast = daysRemaining < 0;
+    return { date: deadline, daysRemaining, isUrgent, isPast };
+  };
+
   const stages = [
-    { id: 'acas', title: 'ACAS Pre-conciliation Form', description: 'Submit Early Conciliation notification to ACAS' },
-    { id: 'et1', title: 'ET1 Form', description: 'Submit your Employment Tribunal claim' },
-    { id: 'et3', title: 'ET3 Response', description: 'Employer response and case management' },
+    { id: 'acas', title: 'ACAS Pre-conciliation Form', description: 'Submit Early Conciliation notification to ACAS', deadline: getDeadlineInfo(deadlines.acas) },
+    { id: 'et1', title: 'ET1 Form', description: 'Submit your Employment Tribunal claim', deadline: getDeadlineInfo(deadlines.et1) },
+    { id: 'et3', title: 'ET3 Response', description: 'Employer response and case management', deadline: null },
   ];
 
   return (
@@ -163,6 +185,21 @@ export function Timeline() {
                   <div className="flex-1 min-w-0">
                     <h2 className="font-semibold text-foreground">{stage.title}</h2>
                     <p className="text-sm text-muted-foreground">{stage.description}</p>
+                    {stage.deadline && (
+                      <div className={cn(
+                        "flex items-center gap-1 text-xs mt-1",
+                        stage.deadline.isPast ? "text-red-600" : stage.deadline.isUrgent ? "text-orange-500" : "text-muted-foreground"
+                      )}>
+                        <Clock className="w-3 h-3" />
+                        <span>
+                          Deadline: {format(stage.deadline.date, 'dd MMM yyyy')} 
+                          {stage.deadline.isPast 
+                            ? ` (${Math.abs(stage.deadline.daysRemaining)} days overdue)`
+                            : ` (${stage.deadline.daysRemaining} days remaining)`
+                          }
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {isExpanded ? (
@@ -349,34 +386,14 @@ export function Timeline() {
                           />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="weeklyPay">Weekly Pay (£)</Label>
-                            <Input
-                              id="weeklyPay"
-                              value={formData.weeklyPay}
-                              onChange={(e) => updateFormData('weeklyPay', e.target.value)}
-                              placeholder="e.g., 500"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="noticePeriod">Notice Period</Label>
-                            <Input
-                              id="noticePeriod"
-                              value={formData.noticePeriod}
-                              onChange={(e) => updateFormData('noticePeriod', e.target.value)}
-                              placeholder="e.g., 1 month"
-                            />
-                          </div>
-                        </div>
-
                         <div className="space-y-2">
-                          <Label htmlFor="claimType">Type of Claim</Label>
-                          <Input
-                            id="claimType"
-                            value={formData.claimType}
-                            onChange={(e) => updateFormData('claimType', e.target.value)}
-                            placeholder="e.g., Unfair dismissal, Discrimination"
+                          <Label htmlFor="desiredOutcome">Desired Outcome</Label>
+                          <Textarea
+                            id="desiredOutcome"
+                            value={formData.desiredOutcome}
+                            onChange={(e) => updateFormData('desiredOutcome', e.target.value)}
+                            placeholder="e.g., Compensation, reinstatement, apology"
+                            rows={3}
                           />
                         </div>
 
