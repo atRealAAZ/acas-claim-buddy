@@ -21,17 +21,14 @@ export function StepIntroduction({ onNext }: StepIntroductionProps) {
         </div>
       </div>
 
-      {/* Avatar circle with empathetic face */}
+      {/* Avatar circle with friendly face */}
       <div className="w-24 h-24 rounded-full border-2 border-foreground mb-auto flex items-center justify-center">
-        <svg viewBox="0 0 48 48" className="w-16 h-16 text-foreground">
-          {/* Eyes - gentle, caring */}
-          <circle cx="16" cy="18" r="2.5" fill="currentColor" />
-          <circle cx="32" cy="18" r="2.5" fill="currentColor" />
-          {/* Eyebrows - slightly raised, empathetic */}
-          <path d="M12 13 Q16 11, 20 13" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-          <path d="M28 13 Q32 11, 36 13" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-          {/* Gentle, warm smile */}
-          <path d="M16 30 Q24 36, 32 30" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <svg viewBox="0 0 48 48" className="w-14 h-14 text-foreground">
+          {/* Simple friendly eyes */}
+          <circle cx="17" cy="20" r="3" fill="currentColor" />
+          <circle cx="31" cy="20" r="3" fill="currentColor" />
+          {/* Simple warm smile */}
+          <path d="M17 30 Q24 35, 31 30" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" />
         </svg>
       </div>
 
