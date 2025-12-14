@@ -5,8 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Calendar as CalendarIcon, ExternalLink, AlertCircle } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
 import confusedPersonImg from '@/assets/confused-person.png';
+import sadPersonImg from '@/assets/sad-person.png';
 
 interface StepDateCheckProps {
   onBack: () => void;
@@ -35,12 +35,19 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
   if (submitted && isTooLate()) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-6 animate-in fade-in duration-500">
-        <Card className="bg-destructive/10 border-destructive/20 max-w-md w-full">
-          <CardContent className="pt-8 pb-8 px-6 text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-destructive/20 flex items-center justify-center mx-auto">
-              <AlertCircle className="w-6 h-6 text-destructive" />
-            </div>
-            <h2 className="text-xl font-semibold text-foreground">
+        <div className="max-w-sm w-full space-y-8">
+          {/* Illustration */}
+          <div className="flex justify-center">
+            <img 
+              src={sadPersonImg} 
+              alt="Sad person" 
+              className="w-48 h-48 object-contain"
+            />
+          </div>
+
+          {/* Content */}
+          <div className="text-center space-y-3">
+            <h2 className="text-2xl font-bold text-foreground">
               Unfortunately, you may be too late
             </h2>
             <p className="text-muted-foreground">
@@ -49,33 +56,37 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
             <p className="text-sm text-muted-foreground">
               However, there may be exceptions. We recommend seeking legal advice to understand your options.
             </p>
-            <div className="bg-background/50 rounded-lg p-4 text-left space-y-2">
-              <p className="text-sm font-medium text-foreground">Contact Cloisters for legal advice:</p>
-              <div className="space-y-1">
-                <a 
-                  href="https://cloisters.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline flex items-center gap-1"
-                >
-                  cloisters.com
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-                <a 
-                  href="tel:02078274000"
-                  className="text-sm text-primary hover:underline block"
-                >
-                  020 7827 4000
-                </a>
-              </div>
+          </div>
+
+          {/* Cloisters Contact */}
+          <div className="bg-muted/50 rounded-xl p-4 space-y-2">
+            <p className="text-sm font-medium text-foreground text-center">Contact Cloisters for legal advice:</p>
+            <div className="flex flex-col items-center gap-1">
+              <a 
+                href="https://cloisters.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-primary hover:underline flex items-center gap-1"
+              >
+                cloisters.com
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              <a 
+                href="tel:02078274000"
+                className="text-sm text-primary hover:underline"
+              >
+                020 7827 4000
+              </a>
             </div>
-          </CardContent>
-        </Card>
-        <div className="w-full max-w-md mt-6">
-          <Button variant="ghost" onClick={onBack} className="text-muted-foreground">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
+          </div>
+
+          {/* Back */}
+          <div className="pt-2">
+            <Button variant="ghost" onClick={() => setSubmitted(false)} className="text-muted-foreground">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -118,7 +129,7 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
 
           {/* Back */}
           <div className="pt-2">
-            <Button variant="ghost" onClick={onBack} className="text-muted-foreground">
+            <Button variant="ghost" onClick={() => setSubmitted(false)} className="text-muted-foreground">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>

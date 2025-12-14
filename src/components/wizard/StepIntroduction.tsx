@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Heart, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import confusedPersonImg from '@/assets/confused-person.png';
 
 const EMPATHETIC_MESSAGES = [
   "You deserve to be treated with dignity and respect. What happened to you was wrong, and it's okay to feel angry about it.",
@@ -28,48 +28,56 @@ export function StepIntroduction({ onNext }: StepIntroductionProps) {
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-6 animate-in fade-in duration-500">
-      <Card className="bg-primary/10 border-primary/20 max-w-md w-full">
-        <CardContent className="pt-8 pb-8 px-6 text-center space-y-6">
-          <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mx-auto">
-            <Heart className="w-7 h-7 text-primary" />
-          </div>
-          <div className="space-y-4">
-            <h1 className="text-2xl font-semibold text-foreground">
-              We're sorry your employer treated you unfairly
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Indeed, they are assholes. Don't worry — we'll help you make them pay.
-            </p>
-          </div>
+      <div className="max-w-sm w-full space-y-8">
+        {/* Illustration */}
+        <div className="flex justify-center">
+          <img 
+            src={confusedPersonImg} 
+            alt="Person thinking" 
+            className="w-48 h-48 object-contain"
+          />
+        </div>
 
+        {/* Content */}
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold text-foreground">
+            We're sorry your employer treated you unfairly
+          </h1>
+          <p className="text-muted-foreground leading-relaxed">
+            Indeed, they are assholes. Don't worry — we'll help you make them pay.
+          </p>
+        </div>
+
+        {/* Encouragement Button */}
+        <div className="space-y-4">
           <Button
             variant="outline"
             onClick={generateSupportMessage}
-            className="gap-2"
+            className="w-full gap-2 rounded-2xl h-12"
           >
             <Sparkles className="w-4 h-4" />
             I need some encouragement
           </Button>
 
           {supportMessage && (
-            <div className="bg-background/50 rounded-lg p-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <p className="text-sm text-foreground/80 italic leading-relaxed">
+            <div className="bg-muted/50 rounded-xl p-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <p className="text-sm text-foreground/80 italic leading-relaxed text-center">
                 "{supportMessage}"
               </p>
             </div>
           )}
+        </div>
 
-          <p className="text-muted-foreground pt-2">
-            Once you're ready, we can check if you can make a claim against them.
-          </p>
-        </CardContent>
-      </Card>
+        {/* CTA text */}
+        <p className="text-center text-sm text-muted-foreground">
+          Once you're ready, we can check if you can make a claim against them.
+        </p>
 
-      <div className="w-full max-w-md mt-8">
+        {/* Button */}
         <Button 
           onClick={onNext} 
           size="lg" 
-          className="w-full text-lg py-6"
+          className="w-full h-14 rounded-2xl text-lg font-semibold"
         >
           Check if I can make a claim
         </Button>
