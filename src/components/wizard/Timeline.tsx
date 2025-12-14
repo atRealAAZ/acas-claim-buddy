@@ -536,61 +536,58 @@ export function Timeline() {
 
       {/* Active Stage Form */}
       <div className="relative bg-card rounded-2xl border border-border p-6 animate-in fade-in duration-300">
-        {/* Autosave Notification - only for ACAS and ET1 */}
-        {(activeStage === 'acas' || activeStage === 'et1') && (showAutosaved || isSaving) && (
-          <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 text-green-600 text-xs font-medium rounded-full">
-            {isSaving ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Check className="w-3.5 h-3.5" />
-                Autosaved
-              </>
-            )}
-          </div>
-        )}
+        {/* Top right badges */}
+        <div className="absolute top-3 right-3 flex items-center gap-2">
+          {/* Deadline Badge - only for ACAS and ET1 */}
+          {activeStage === 'acas' && deadlines.acas && (
+            <div className={cn(
+              "flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full",
+              getDeadlineInfo(deadlines.acas)?.isUrgent 
+                ? "bg-destructive/10 text-destructive" 
+                : "bg-amber-500/10 text-amber-600"
+            )}>
+              <Clock className="w-3.5 h-3.5" />
+              {getDeadlineInfo(deadlines.acas)?.isPast 
+                ? "Overdue" 
+                : `${getDeadlineInfo(deadlines.acas)?.daysRemaining} days left`}
+            </div>
+          )}
+          {activeStage === 'et1' && deadlines.et1 && (
+            <div className={cn(
+              "flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full",
+              getDeadlineInfo(deadlines.et1)?.isUrgent 
+                ? "bg-destructive/10 text-destructive" 
+                : "bg-amber-500/10 text-amber-600"
+            )}>
+              <Clock className="w-3.5 h-3.5" />
+              {getDeadlineInfo(deadlines.et1)?.isPast 
+                ? "Overdue" 
+                : `${getDeadlineInfo(deadlines.et1)?.daysRemaining} days left`}
+            </div>
+          )}
+
+          {/* Autosave Notification - only for ACAS and ET1 */}
+          {(activeStage === 'acas' || activeStage === 'et1') && (showAutosaved || isSaving) && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 text-green-600 text-xs font-medium rounded-full">
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Check className="w-3.5 h-3.5" />
+                  Autosaved
+                </>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Form Title */}
-        <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6">
           {currentStage.title}
         </h2>
-
-        {/* Deadline Info */}
-        {activeStage === 'acas' && deadlines.acas && (
-          <div className={cn(
-            "flex items-center gap-1.5 text-sm mb-6",
-            getDeadlineInfo(deadlines.acas)?.isUrgent ? "text-destructive" : "text-muted-foreground"
-          )}>
-            <Clock className="w-4 h-4" />
-            {getDeadlineInfo(deadlines.acas)?.isPast ? (
-              <span>Deadline passed</span>
-            ) : (
-              <span>{getDeadlineInfo(deadlines.acas)?.daysRemaining} days left until {format(deadlines.acas, 'dd MMM yyyy')}</span>
-            )}
-          </div>
-        )}
-        {activeStage === 'et1' && deadlines.et1 && (
-          <div className={cn(
-            "flex items-center gap-1.5 text-sm mb-6",
-            getDeadlineInfo(deadlines.et1)?.isUrgent ? "text-destructive" : "text-muted-foreground"
-          )}>
-            <Clock className="w-4 h-4" />
-            {getDeadlineInfo(deadlines.et1)?.isPast ? (
-              <span>Deadline passed</span>
-            ) : (
-              <span>{getDeadlineInfo(deadlines.et1)?.daysRemaining} days left until {format(deadlines.et1, 'dd MMM yyyy')}</span>
-            )}
-          </div>
-        )}
-        {activeStage === 'waiting' && (
-          <div className="mb-6" />
-        )}
-        {(activeStage === 'acas' || activeStage === 'et1') && !deadlines.acas && !deadlines.et1 && (
-          <p className="text-muted-foreground text-sm mb-6">Enter your employment end date to see deadlines</p>
-        )}
 
         {/* Form Content */}
         {renderStageContent(activeStage)}
