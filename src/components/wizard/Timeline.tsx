@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { GreenPTFloatingChat } from '@/components/GreenPTFloatingChat';
@@ -65,7 +66,7 @@ export function Timeline() {
   const [generatedForms, setGeneratedForms] = useState<{ acas?: string; et1?: string }>({});
   const [acceptedForms, setAcceptedForms] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [sentForms, setSentForms] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
-  const [collapsedForms, setCollapsedForms] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
+  const [expandedForms, setExpandedForms] = useState<{ acas: boolean; et1: boolean; et3: boolean }>({ acas: true, et1: true, et3: true });
   const [isGenerating, setIsGenerating] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: File[] }>({});
 
@@ -217,44 +218,58 @@ export function Timeline() {
       </div>
 
       {generatedForms.acas && (
-        <div className="mt-4 p-6 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border border-primary/20">
-          <div className="flex items-center gap-2 mb-4">
-            <FileText className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-semibold text-foreground">Generated ACAS Form</h3>
+        <Collapsible
+          open={expandedForms.acas}
+          onOpenChange={(open) => setExpandedForms(prev => ({ ...prev, acas: open }))}
+        >
+          <div className="mt-4 p-6 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border border-primary/20">
+            <CollapsibleTrigger className="w-full flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity">
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-primary" />
+                <h3 className="text-lg font-semibold text-foreground">Generated ACAS Form</h3>
+              </div>
+              {expandedForms.acas ? (
+                <ChevronDown className="w-5 h-5 text-muted-foreground" />
+              ) : (
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              )}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-4">
+              <Textarea
+                value={generatedForms.acas}
+                onChange={(e) => setGeneratedForms(prev => ({ ...prev, acas: e.target.value }))}
+                className="min-h-[300px] font-serif text-base leading-relaxed bg-background border-border resize-y rounded-xl"
+                disabled={acceptedForms.acas}
+              />
+              {!acceptedForms.acas && (
+                <Button
+                  onClick={() => {
+                    setAcceptedForms(prev => ({ ...prev, acas: true }));
+                    toast.success('ACAS form accepted!');
+                  }}
+                  className="w-full mt-4 h-12 rounded-full"
+                  size="lg"
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Accept ACAS Form
+                </Button>
+              )}
+              {acceptedForms.acas && !sentForms.acas && (
+                <Button
+                  onClick={() => {
+                    setSentForms(prev => ({ ...prev, acas: true }));
+                    toast.success('ACAS form sent!');
+                  }}
+                  className="w-full mt-4 h-12 rounded-full"
+                  size="lg"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send ACAS Form
+                </Button>
+              )}
+            </CollapsibleContent>
           </div>
-          <Textarea
-            value={generatedForms.acas}
-            onChange={(e) => setGeneratedForms(prev => ({ ...prev, acas: e.target.value }))}
-            className="min-h-[300px] font-serif text-base leading-relaxed bg-background border-border resize-y rounded-xl"
-            disabled={acceptedForms.acas}
-          />
-          {!acceptedForms.acas && (
-            <Button
-              onClick={() => {
-                setAcceptedForms(prev => ({ ...prev, acas: true }));
-                toast.success('ACAS form accepted!');
-              }}
-              className="w-full mt-4 h-12 rounded-full"
-              size="lg"
-            >
-              <CheckCircle2 className="w-4 h-4 mr-2" />
-              Accept ACAS Form
-            </Button>
-          )}
-          {acceptedForms.acas && !sentForms.acas && (
-            <Button
-              onClick={() => {
-                setSentForms(prev => ({ ...prev, acas: true }));
-                toast.success('ACAS form sent!');
-              }}
-              className="w-full mt-4 h-12 rounded-full"
-              size="lg"
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Send ACAS Form
-            </Button>
-          )}
-        </div>
+        </Collapsible>
       )}
     </div>
   );
@@ -316,44 +331,58 @@ export function Timeline() {
       </div>
 
       {generatedForms.et1 && (
-        <div className="mt-4 p-6 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border border-primary/20">
-          <div className="flex items-center gap-2 mb-4">
-            <FileText className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-semibold text-foreground">Generated ET1 Form</h3>
+        <Collapsible
+          open={expandedForms.et1}
+          onOpenChange={(open) => setExpandedForms(prev => ({ ...prev, et1: open }))}
+        >
+          <div className="mt-4 p-6 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border border-primary/20">
+            <CollapsibleTrigger className="w-full flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity">
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-primary" />
+                <h3 className="text-lg font-semibold text-foreground">Generated ET1 Form</h3>
+              </div>
+              {expandedForms.et1 ? (
+                <ChevronDown className="w-5 h-5 text-muted-foreground" />
+              ) : (
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              )}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-4">
+              <Textarea
+                value={generatedForms.et1}
+                onChange={(e) => setGeneratedForms(prev => ({ ...prev, et1: e.target.value }))}
+                className="min-h-[400px] font-serif text-base leading-relaxed bg-background border-border resize-y rounded-xl"
+                disabled={acceptedForms.et1}
+              />
+              {!acceptedForms.et1 && (
+                <Button
+                  onClick={() => {
+                    setAcceptedForms(prev => ({ ...prev, et1: true }));
+                    toast.success('ET1 form accepted!');
+                  }}
+                  className="w-full mt-4 h-12 rounded-full"
+                  size="lg"
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Accept ET1 Form
+                </Button>
+              )}
+              {acceptedForms.et1 && !sentForms.et1 && (
+                <Button
+                  onClick={() => {
+                    setSentForms(prev => ({ ...prev, et1: true }));
+                    toast.success('ET1 form sent!');
+                  }}
+                  className="w-full mt-4 h-12 rounded-full"
+                  size="lg"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send ET1 Form
+                </Button>
+              )}
+            </CollapsibleContent>
           </div>
-          <Textarea
-            value={generatedForms.et1}
-            onChange={(e) => setGeneratedForms(prev => ({ ...prev, et1: e.target.value }))}
-            className="min-h-[400px] font-serif text-base leading-relaxed bg-background border-border resize-y rounded-xl"
-            disabled={acceptedForms.et1}
-          />
-          {!acceptedForms.et1 && (
-            <Button
-              onClick={() => {
-                setAcceptedForms(prev => ({ ...prev, et1: true }));
-                toast.success('ET1 form accepted!');
-              }}
-              className="w-full mt-4 h-12 rounded-full"
-              size="lg"
-            >
-              <CheckCircle2 className="w-4 h-4 mr-2" />
-              Accept ET1 Form
-            </Button>
-          )}
-          {acceptedForms.et1 && !sentForms.et1 && (
-            <Button
-              onClick={() => {
-                setSentForms(prev => ({ ...prev, et1: true }));
-                toast.success('ET1 form sent!');
-              }}
-              className="w-full mt-4 h-12 rounded-full"
-              size="lg"
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Send ET1 Form
-            </Button>
-          )}
-        </div>
+        </Collapsible>
       )}
     </div>
   );
