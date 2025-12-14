@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2, CheckCircle2, Send, Clock, Cloud } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2, CheckCircle2, Send, Clock, CalendarIcon } from 'lucide-react';
 import { addMonths, addDays, format, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,8 @@ import { toast } from 'sonner';
 import { GreenPTFloatingChat } from '@/components/GreenPTFloatingChat';
 import { MeditationWidget } from '@/components/MeditationWidget';
 import { FormProgress } from './FormProgress';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 
 interface FormData {
   // Personal details
@@ -234,6 +236,33 @@ export function Timeline() {
           placeholder="Enter employer address"
           className={inputClassName}
         />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-primary font-medium">Employment End Date</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full h-14 rounded-2xl border-2 border-muted/50 bg-background px-5 text-base justify-start text-left font-normal",
+                !formData.employmentEndDate && "text-muted-foreground/60"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {formData.employmentEndDate ? format(new Date(formData.employmentEndDate), "PPP") : "Select the date your employment ended"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={formData.employmentEndDate ? new Date(formData.employmentEndDate) : undefined}
+              onSelect={(date) => updateFormData('employmentEndDate', date ? format(date, 'yyyy-MM-dd') : '')}
+              initialFocus
+              className="p-3 pointer-events-auto"
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
       <div className="pt-4">
