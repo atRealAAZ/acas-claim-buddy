@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2, CheckCircle2, Send, Clock } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Check, ChevronDown, ChevronRight, Upload, Sparkles, FileText, Loader2, CheckCircle2, Send, Clock, Cloud } from 'lucide-react';
 import { addMonths, addDays, format, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -66,6 +66,44 @@ export function Timeline() {
   const [expandedForms, setExpandedForms] = useState<{ acas: boolean; et1: boolean }>({ acas: true, et1: true });
   const [isGenerating, setIsGenerating] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: File[] }>({});
+  const [showAutosaved, setShowAutosaved] = useState(false);
+  const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hideAutosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Autosave effect - triggers when form data changes
+  useEffect(() => {
+    // Clear existing timeouts
+    if (autosaveTimeoutRef.current) {
+      clearTimeout(autosaveTimeoutRef.current);
+    }
+    if (hideAutosaveTimeoutRef.current) {
+      clearTimeout(hideAutosaveTimeoutRef.current);
+    }
+
+    // Only show autosave if there's actual data
+    const hasData = Object.values(formData).some(value => value.trim() !== '');
+    if (!hasData) return;
+
+    // Debounce autosave by 1 second
+    autosaveTimeoutRef.current = setTimeout(() => {
+      // Simulate autosave (in real app, this would save to backend)
+      setShowAutosaved(true);
+      
+      // Hide the notification after 3 seconds
+      hideAutosaveTimeoutRef.current = setTimeout(() => {
+        setShowAutosaved(false);
+      }, 3000);
+    }, 1000);
+
+    return () => {
+      if (autosaveTimeoutRef.current) {
+        clearTimeout(autosaveTimeoutRef.current);
+      }
+      if (hideAutosaveTimeoutRef.current) {
+        clearTimeout(hideAutosaveTimeoutRef.current);
+      }
+    };
+  }, [formData]);
 
   const updateFormData = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -501,7 +539,18 @@ export function Timeline() {
       </div>
 
       {/* Active Stage Form */}
-      <div className="bg-card rounded-2xl border border-border p-6 animate-in fade-in duration-300">
+      <div className="relative bg-card rounded-2xl border border-border p-6 animate-in fade-in duration-300">
+        {/* Autosave Notification */}
+        <div
+          className={cn(
+            "absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 text-green-600 text-xs font-medium rounded-full transition-all duration-300",
+            showAutosaved ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
+          )}
+        >
+          <Cloud className="w-3.5 h-3.5" />
+          Autosaved
+        </div>
+
         {/* Form Title */}
         <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6">
           {currentStage.title}
