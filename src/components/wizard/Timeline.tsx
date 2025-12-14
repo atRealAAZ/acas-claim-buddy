@@ -615,11 +615,6 @@ export function Timeline() {
           )}
         </div>
 
-        {/* Form Title */}
-        <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6">
-          {currentStage.title}
-        </h2>
-
         {/* Form Content */}
         {renderStageContent(activeStage)}
       </div>
