@@ -22,6 +22,14 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // For testing: skip auth if no credentials provided
+    if (!email.trim() && !password) {
+      toast.success('Skipping auth for testing - proceeding to next step');
+      onNext();
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -31,6 +39,7 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
           toast.error(error.message);
         } else {
           toast.success('Logged in successfully!');
+          onNext();
         }
       } else {
         if (password !== confirmPassword) {
@@ -43,6 +52,7 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
           toast.error(error.message);
         } else {
           toast.success('Account created successfully!');
+          onNext();
         }
       }
     } finally {
