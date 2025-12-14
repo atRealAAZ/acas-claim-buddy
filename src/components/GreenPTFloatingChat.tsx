@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageCircle, X, Send, Loader2, Bot, User } from 'lucide-react';
+import { X, Send, Loader2, Bot, User, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -102,10 +102,10 @@ export function GreenPTFloatingChat({ formData }: GreenPTFloatingChatProps) {
           "fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300",
           isOpen 
             ? "bg-muted text-muted-foreground hover:bg-muted/80" 
-            : "bg-primary text-primary-foreground hover:bg-primary/90"
+            : "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70"
         )}
       >
-        {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+        {isOpen ? <X className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
       </button>
 
       {/* Chat Window */}
@@ -118,13 +118,15 @@ export function GreenPTFloatingChat({ formData }: GreenPTFloatingChatProps) {
         )}
       >
         {/* Header */}
-        <div className="p-4 border-b border-border bg-muted/50">
+        <div className="p-4 border-b border-border bg-gradient-to-r from-primary/10 to-primary/5">
           <h2 className="font-semibold text-foreground flex items-center gap-2">
-            <Bot className="w-5 h-5 text-primary" />
-            Legal Assistant
+            <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+              <Sparkles className="w-3.5 h-3.5 text-primary" />
+            </div>
+            AI Legal Assistant
           </h2>
           <p className="text-xs text-muted-foreground mt-1">
-            Ask me anything about your employment tribunal case
+            Powered by AI · Ask me anything about your case
           </p>
         </div>
 
@@ -133,9 +135,12 @@ export function GreenPTFloatingChat({ formData }: GreenPTFloatingChatProps) {
           <div className="space-y-4">
             {messages.length === 0 && (
               <div className="text-center text-muted-foreground py-8">
-                <Bot className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">Hi! I'm here to help with your case.</p>
-                <p className="text-xs mt-1">Ask me about ACAS, ET1 forms, or deadlines.</p>
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <p className="text-sm font-medium text-foreground">AI-Powered Support</p>
+                <p className="text-xs mt-1">I'm an AI assistant here to help with your case.</p>
+                <p className="text-xs mt-0.5">Ask me about ACAS, ET1 forms, or deadlines.</p>
               </div>
             )}
             {messages.map((msg, index) => (
