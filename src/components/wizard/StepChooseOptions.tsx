@@ -8,12 +8,12 @@ interface StepChooseOptionsProps {
 }
 
 const OPTIONS = [
-  { id: "unfair-dismissal", label: "Unfair dismissal", size: "lg" },
-  { id: "role-changes", label: "Role changes", size: "md" },
-  { id: "workplace-bullying", label: "Workplace bullying", size: "lg" },
-  { id: "reduced-hours", label: "Reduced hours", size: "lg" },
-  { id: "adjustment-refusal", label: "Adjustment refusal", size: "lg" },
-  { id: "other", label: "Other", size: "md" },
+  { id: "dismissed", label: "I was dismissed or let go" },
+  { id: "role-changes", label: "My role or duties were changed" },
+  { id: "bullying", label: "I was bullied or treated badly at work" },
+  { id: "hours-pay-reduced", label: "My hours or pay were reduced" },
+  { id: "adjustments-refused", label: "Adjustments I needed were refused" },
+  { id: "something-else", label: "Something else happened" },
 ];
 
 export function StepChooseOptions({ onBack, onNext }: StepChooseOptionsProps) {
@@ -37,78 +37,68 @@ export function StepChooseOptions({ onBack, onNext }: StepChooseOptionsProps) {
       <div className="relative w-full max-w-md h-[320px] my-4">
         {/* Row 1 */}
         <button
-          onClick={() => toggleOption("unfair-dismissal")}
-          className={`absolute left-[5%] top-[0%] w-24 h-24 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 ${
-            selected.includes("I was dismissed or let go")
+          onClick={() => toggleOption("dismissed")}
+          className={`absolute left-[2%] top-[0%] w-28 h-28 rounded-full flex items-center justify-center text-center text-xs font-medium transition-all duration-200 p-2 ${
+            selected.includes("dismissed")
               ? "bg-primary text-primary-foreground scale-110"
               : "bg-primary/40 text-primary-foreground hover:bg-primary/60"
           }`}
         >
-          I was dismissed
-          <br />
-          or let go
+          I was dismissed or let go
         </button>
         <button
           onClick={() => toggleOption("role-changes")}
-          className={`absolute left-[32%] top-[8%] w-20 h-20 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 ${
+          className={`absolute left-[35%] top-[5%] w-24 h-24 rounded-full flex items-center justify-center text-center text-xs font-medium transition-all duration-200 p-2 ${
             selected.includes("role-changes")
               ? "bg-primary text-primary-foreground scale-110"
               : "bg-primary/60 text-primary-foreground hover:bg-primary/80"
           }`}
         >
-          Role
-          <br />
-          changes
+          My role or duties were changed
         </button>
         <button
-          onClick={() => toggleOption("workplace-bullying")}
-          className={`absolute right-[5%] top-[5%] w-24 h-24 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 ${
-            selected.includes("workplace-bullying")
+          onClick={() => toggleOption("bullying")}
+          className={`absolute right-[2%] top-[0%] w-28 h-28 rounded-full flex items-center justify-center text-center text-xs font-medium transition-all duration-200 p-2 ${
+            selected.includes("bullying")
               ? "bg-primary text-primary-foreground scale-110"
               : "bg-primary text-primary-foreground hover:bg-primary/80"
           }`}
         >
-          Workplace
-          <br />
-          bullying
+          I was bullied or treated badly at work
         </button>
 
         {/* Row 2 */}
         <button
-          onClick={() => toggleOption("reduced-hours")}
-          className={`absolute left-[8%] top-[35%] w-24 h-24 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 ${
-            selected.includes("reduced-hours")
+          onClick={() => toggleOption("hours-pay-reduced")}
+          className={`absolute left-[5%] top-[38%] w-28 h-28 rounded-full flex items-center justify-center text-center text-xs font-medium transition-all duration-200 p-2 ${
+            selected.includes("hours-pay-reduced")
               ? "bg-primary text-primary-foreground scale-110"
               : "bg-primary text-primary-foreground hover:bg-primary/80"
           }`}
         >
-          Reduced
-          <br />
-          hours
+          My hours or pay were reduced
         </button>
         <button
-          onClick={() => toggleOption("adjustment-refusal")}
-          className={`absolute left-[35%] top-[40%] w-24 h-24 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 ${
-            selected.includes("adjustment-refusal")
+          onClick={() => toggleOption("adjustments-refused")}
+          className={`absolute left-[38%] top-[35%] w-24 h-24 rounded-full flex items-center justify-center text-center text-xs font-medium transition-all duration-200 p-2 ${
+            selected.includes("adjustments-refused")
               ? "bg-primary text-primary-foreground scale-110"
               : "bg-primary/60 text-primary-foreground hover:bg-primary/80"
           }`}
         >
-          Adjustment
-          <br />
-          refusal
+          Adjustments I needed were refused
         </button>
 
         {/* Row 3 */}
         <button
-          onClick={() => toggleOption("other")}
-          className={`absolute left-[15%] top-[70%] w-20 h-20 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 ${
-            selected.includes("other")
+          onClick={() => toggleOption("something-else")}
+          className={`absolute left-[12%] top-[72%] w-24 h-24 rounded-full flex items-center justify-center text-center text-xs font-medium transition-all duration-200 p-2 ${
+            selected.includes("something-else")
               ? "bg-primary text-primary-foreground scale-110"
               : "bg-primary/40 text-primary-foreground hover:bg-primary/60"
           }`}
         >
-          Other
+          Something else happened
         </button>
       </div>
 
