@@ -143,10 +143,10 @@ export function Timeline() {
   };
 
   const stages = [
-    { id: 'acas', title: 'ACAS Pre-conciliation', timeEstimate: '13min', segments: 4, currentSegment: 1 },
-    { id: 'et1', title: 'ET1 Form', timeEstimate: '9min', segments: 4, currentSegment: 3 },
-    { id: 'et3', title: 'ET3 Form', timeEstimate: '5min', segments: 4, currentSegment: 3 },
-    { id: 'waiting', title: 'Waiting Employer Response', timeEstimate: '5min', segments: 4, currentSegment: 4 },
+    { id: 'acas', title: 'ACAS Pre-conciliation', timeEstimate: '13min', progress: 25 },
+    { id: 'et1', title: 'ET1 Form', timeEstimate: '9min', progress: 50 },
+    { id: 'et3', title: 'ET3 Form', timeEstimate: '5min', progress: 75 },
+    { id: 'waiting', title: 'Waiting Employer Response', timeEstimate: '5min', progress: 100 },
   ];
 
   const navigateToNextStage = () => {
@@ -524,23 +524,35 @@ export function Timeline() {
         </Button>
       </div>
 
-      {/* Stage Navigation Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {stages.map((stage) => (
-          <button
-            key={stage.id}
-            onClick={() => setActiveStage(stage.id)}
-            className={cn(
-              "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
-              activeStage === stage.id
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
-            )}
-          >
-            {isStageComplete(stage.id) && <Check className="w-4 h-4 inline mr-1" />}
-            {stage.title}
-          </button>
-        ))}
+      {/* Stage Navigation with Progress */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-semibold text-foreground">
+            {currentStage.progress}% complete
+          </span>
+          <div className="flex items-center gap-1 text-muted-foreground">
+            <Clock className="w-4 h-4" />
+            <span className="text-sm">{currentStage.timeEstimate}</span>
+          </div>
+        </div>
+        
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {stages.map((stage) => (
+            <button
+              key={stage.id}
+              onClick={() => setActiveStage(stage.id)}
+              className={cn(
+                "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
+                activeStage === stage.id
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              )}
+            >
+              {isStageComplete(stage.id) && <Check className="w-4 h-4 inline mr-1" />}
+              {stage.title}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Active Stage Form */}
@@ -549,13 +561,6 @@ export function Timeline() {
         <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6">
           {currentStage.title}
         </h2>
-
-        {/* Progress Bar */}
-        <FormProgress
-          currentSegment={currentStage.currentSegment}
-          totalSegments={currentStage.segments}
-          timeEstimate={currentStage.timeEstimate}
-        />
 
         {/* Form Content */}
         {renderStageContent(activeStage)}
