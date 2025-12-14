@@ -22,14 +22,6 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // For testing: skip auth if no credentials provided
-    if (!email.trim() && !password) {
-      toast.success('Skipping auth for testing - proceeding to next step');
-      onNext();
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -42,11 +34,6 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
           onNext();
         }
       } else {
-        if (password !== confirmPassword) {
-          toast.error('Passwords do not match');
-          setLoading(false);
-          return;
-        }
         const { error } = await signUp(email, password);
         if (error) {
           toast.error(error.message);
