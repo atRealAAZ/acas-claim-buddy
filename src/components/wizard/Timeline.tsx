@@ -145,8 +145,16 @@ export function Timeline() {
   const stages = [
     { id: 'acas', title: 'ACAS Pre-conciliation', timeEstimate: '13min', segments: 4, currentSegment: 1 },
     { id: 'et1', title: 'ET1 Form', timeEstimate: '9min', segments: 4, currentSegment: 3 },
-    { id: 'et3', title: 'Waiting Employer Response', timeEstimate: '5min', segments: 4, currentSegment: 3 },
+    { id: 'et3', title: 'ET3 Form', timeEstimate: '5min', segments: 4, currentSegment: 3 },
+    { id: 'waiting', title: 'Waiting Employer Response', timeEstimate: '5min', segments: 4, currentSegment: 4 },
   ];
+
+  const navigateToNextStage = () => {
+    const currentIndex = stages.findIndex(s => s.id === activeStage);
+    if (currentIndex < stages.length - 1) {
+      setActiveStage(stages[currentIndex + 1].id);
+    }
+  };
 
   const inputClassName = "h-14 rounded-2xl border-2 border-muted/50 bg-background px-5 text-base placeholder:text-muted-foreground/60 focus:border-primary";
   const textareaClassName = "rounded-2xl border-2 border-muted/50 bg-background px-5 py-4 text-base placeholder:text-muted-foreground/60 focus:border-primary resize-none";
@@ -277,6 +285,17 @@ export function Timeline() {
           </div>
         </Collapsible>
       )}
+
+      <div className="pt-4">
+        <Button
+          onClick={navigateToNextStage}
+          variant="outline"
+          className="w-full h-12 rounded-full"
+          size="lg"
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 
@@ -396,10 +415,21 @@ export function Timeline() {
           </div>
         </Collapsible>
       )}
+
+      <div className="pt-4">
+        <Button
+          onClick={navigateToNextStage}
+          variant="outline"
+          className="w-full h-12 rounded-full"
+          size="lg"
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 
-  // Render ET1 Upload section
+  // Render ET3 Form section
   const renderET3Form = () => (
     <div className="space-y-5">
       <div className="space-y-2">
@@ -431,10 +461,32 @@ export function Timeline() {
           className="w-full h-14 rounded-full text-lg font-semibold"
           size="lg"
         >
-          Generate ACAS Form
+          Generate ET3 Form
         </Button>
       </div>
 
+      <div className="pt-4">
+        <Button
+          onClick={navigateToNextStage}
+          variant="outline"
+          className="w-full h-12 rounded-full"
+          size="lg"
+        >
+          Next
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Render Waiting Response section with meditation
+  const renderWaitingResponse = () => (
+    <div className="space-y-5">
+      <div className="text-center py-8">
+        <Clock className="w-16 h-16 mx-auto mb-4 text-primary/50" />
+        <h3 className="text-xl font-semibold text-foreground mb-2">Waiting for Employer Response</h3>
+        <p className="text-muted-foreground">Your case has been submitted. Take some time to relax while waiting for a response.</p>
+      </div>
+      
       <div className="mb-4">
         <MeditationWidget />
       </div>
@@ -449,6 +501,8 @@ export function Timeline() {
         return renderET1Form();
       case 'et3':
         return renderET3Form();
+      case 'waiting':
+        return renderWaitingResponse();
       default:
         return null;
     }
