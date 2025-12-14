@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Calendar, ExternalLink, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Calendar as CalendarIcon, ExternalLink, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 interface StepDateCheckProps {
   onBack: () => void;
@@ -11,7 +14,7 @@ interface StepDateCheckProps {
 }
 
 export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState<Date | undefined>();
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,7 +87,7 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
         <Card className="bg-primary/10 border-primary/20 max-w-md w-full">
           <CardContent className="pt-8 pb-8 px-6 text-center space-y-6">
             <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto">
-              <Calendar className="w-6 h-6 text-primary" />
+              <CalendarIcon className="w-6 h-6 text-primary" />
             </div>
             <h2 className="text-xl font-semibold text-foreground">
               You're potentially eligible
@@ -116,7 +119,7 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
         <CardContent className="pt-8 pb-8 px-6 space-y-6">
           <div className="text-center space-y-2">
             <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
-              <Calendar className="w-6 h-6 text-primary" />
+              <CalendarIcon className="w-6 h-6 text-primary" />
             </div>
             <h2 className="text-xl font-semibold text-foreground">When did the discrimination happen?</h2>
             <p className="text-sm text-muted-foreground">
@@ -127,14 +130,51 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="date" className="text-foreground">Date of discrimination</Label>
-              <Input
-                id="date"
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="bg-background border-border focus:border-primary"
-                required
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal bg-background border-border",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="center">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    disabled={(d) => d > new Date()}
+                    initialFocus
+                    className="p-4 pointer-events-auto rounded-xl border-2 border-primary/30 bg-card"
+                    classNames={{
+                      months: "flex flex-col",
+                      month: "space-y-4",
+                      caption: "flex justify-between items-center px-2",
+                      caption_label: "text-lg font-bold text-foreground flex items-center gap-1",
+                      nav: "flex items-center gap-1",
+                      nav_button: "h-8 w-8 bg-transparent p-0 text-primary hover:text-primary/80 transition-colors",
+                      nav_button_previous: "",
+                      nav_button_next: "",
+                      table: "w-full border-collapse",
+                      head_row: "flex",
+                      head_cell: "text-muted-foreground w-10 font-normal text-xs flex flex-col items-center",
+                      row: "flex w-full",
+                      cell: "h-10 w-10 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
+                      day: "h-10 w-10 p-0 font-normal text-foreground hover:bg-primary/10 rounded-lg transition-colors",
+                      day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                      day_today: "bg-accent text-accent-foreground",
+                      day_outside: "text-muted-foreground/40",
+                      day_disabled: "text-muted-foreground/30",
+                      day_hidden: "invisible",
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="flex justify-between pt-4">
