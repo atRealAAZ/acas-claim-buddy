@@ -32,9 +32,9 @@ export function StepChooseOptions({
       <div className="flex-1 flex flex-col items-center w-full max-w-sm">
         {/* Header text */}
         <div className="text-center space-y-3 mt-8 mb-8">
-          <h1 className="text-2xl font-bold text-foreground">Welcome to XYZ</h1>
+          <h1 className="text-2xl font-bold text-foreground">Which of these feels closest to what happened to you?</h1>
           <p className="text-muted-foreground leading-relaxed">
-            Embark on a journey to discover inner peace and vitality through the practice of yoga.
+            You can choose one, more than one, or skip this for now.
           </p>
         </div>
 
