@@ -88,12 +88,9 @@ export function StepDateCheck({
             <h2 className="text-2xl font-bold text-foreground">
               You're potentially eligible
             </h2>
-            <p className="text-muted-foreground">
-              Based on the date you provided, you're within the time limit to start an ACAS Early Conciliation claim.
-            </p>
+            <p className="text-muted-foreground">Based on the date you shared, you’re within the time limit to start ACAS Early Conciliation.  Creating an account lets you save your progress and continue when you’re ready.</p>
             <p className="text-sm text-muted-foreground">
-              Create an account to continue with your claim.
-            </p>
+          </p>
           </div>
 
           {/* Button */}
@@ -148,11 +145,7 @@ export function StepDateCheck({
         </div>
 
         {/* Not sure option */}
-        <button
-          type="button"
-          onClick={onNext}
-          className="w-full text-center text-sm text-muted-foreground hover:text-foreground underline transition-colors"
-        >
+        <button type="button" onClick={onNext} className="w-full text-center text-sm text-muted-foreground hover:text-foreground underline transition-colors">
           I'm not sure of the exact date
         </button>
 
