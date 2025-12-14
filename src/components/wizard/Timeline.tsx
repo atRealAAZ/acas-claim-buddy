@@ -331,7 +331,7 @@ export function Timeline() {
               Generating...
             </>
           ) : (
-            'Next'
+            'Generate ET1 Form'
           )}
         </Button>
       </div>
@@ -346,6 +346,12 @@ export function Timeline() {
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-primary" />
                 <h3 className="text-lg font-semibold text-foreground">Generated ET1 Form</h3>
+                {sentForms.et1 && (
+                  <span className="ml-2 px-2.5 py-0.5 bg-green-500/20 text-green-600 text-xs font-semibold rounded-full flex items-center gap-1">
+                    <Check className="w-3 h-3" />
+                    Sent
+                  </span>
+                )}
               </div>
               {expandedForms.et1 ? (
                 <ChevronDown className="w-5 h-5 text-muted-foreground" />
