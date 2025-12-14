@@ -245,12 +245,14 @@ export function Timeline() {
             <Button
               variant="outline"
               className={cn(
-                "w-full h-14 rounded-2xl border-2 border-muted/50 bg-background px-5 text-base justify-start text-left font-normal",
+                "w-full h-14 rounded-2xl border-2 border-muted/50 bg-background px-5 text-base justify-start text-left font-normal overflow-hidden",
                 !formData.employmentEndDate && "text-muted-foreground/60"
               )}
             >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {formData.employmentEndDate ? format(new Date(formData.employmentEndDate), "PPP") : "Select the date your employment ended"}
+              <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+              <span className="truncate">
+                {formData.employmentEndDate ? format(new Date(formData.employmentEndDate), "PPP") : "Select the date your employment ended"}
+              </span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
