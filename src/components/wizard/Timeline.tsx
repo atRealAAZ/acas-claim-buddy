@@ -14,6 +14,7 @@ import { MeditationWidget } from '@/components/MeditationWidget';
 import { FormProgress } from './FormProgress';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
+import { sendEmail } from '@/lib/email';
 
 interface FormData {
   // Personal details
@@ -340,9 +341,31 @@ export function Timeline() {
               )}
               {acceptedForms.acas && !sentForms.acas && (
                 <Button
-                  onClick={() => {
+                  onClick={async () => {
                     setSentForms(prev => ({ ...prev, acas: true }));
                     toast.success('ACAS form sent!');
+                    
+                    // Send email notification
+                    const result = await sendEmail({
+                      subject: 'ACAS Form Submitted - ACAS Claim Helper',
+                      html: `
+                        <h1>ACAS Form Submitted</h1>
+                        <p>A new ACAS Early Conciliation form has been submitted.</p>
+                        <h2>Claimant Details:</h2>
+                        <ul>
+                          <li><strong>Name:</strong> ${formData.fullName || 'Not provided'}</li>
+                          <li><strong>Email:</strong> ${formData.email || 'Not provided'}</li>
+                          <li><strong>Employer:</strong> ${formData.employerName || 'Not provided'}</li>
+                          <li><strong>Employment End Date:</strong> ${formData.employmentEndDate || 'Not provided'}</li>
+                        </ul>
+                        <h2>Generated Form:</h2>
+                        <pre style="background: #f5f5f5; padding: 16px; border-radius: 8px; white-space: pre-wrap;">${generatedForms.acas}</pre>
+                      `,
+                    });
+                    
+                    if (!result.success) {
+                      console.error('Failed to send email notification:', result.error);
+                    }
                   }}
                   className="w-full mt-4 h-12 rounded-full"
                   size="lg"
@@ -470,9 +493,32 @@ export function Timeline() {
               )}
               {acceptedForms.et1 && !sentForms.et1 && (
                 <Button
-                  onClick={() => {
+                  onClick={async () => {
                     setSentForms(prev => ({ ...prev, et1: true }));
                     toast.success('ET1 form sent!');
+                    
+                    // Send email notification
+                    const result = await sendEmail({
+                      subject: 'ET1 Form Submitted - ACAS Claim Helper',
+                      html: `
+                        <h1>ET1 Form Submitted</h1>
+                        <p>A new ET1 Employment Tribunal Claim form has been submitted.</p>
+                        <h2>Claimant Details:</h2>
+                        <ul>
+                          <li><strong>Name:</strong> ${formData.fullName || 'Not provided'}</li>
+                          <li><strong>Email:</strong> ${formData.email || 'Not provided'}</li>
+                          <li><strong>Employer:</strong> ${formData.employerName || 'Not provided'}</li>
+                          <li><strong>ACAS Certificate:</strong> ${formData.acasCertificateNumber || 'Not provided'}</li>
+                          <li><strong>Desired Outcome:</strong> ${formData.desiredOutcome || 'Not provided'}</li>
+                        </ul>
+                        <h2>Generated Form:</h2>
+                        <pre style="background: #f5f5f5; padding: 16px; border-radius: 8px; white-space: pre-wrap;">${generatedForms.et1}</pre>
+                      `,
+                    });
+                    
+                    if (!result.success) {
+                      console.error('Failed to send email notification:', result.error);
+                    }
                   }}
                   className="w-full mt-4 h-12 rounded-full"
                   size="lg"
