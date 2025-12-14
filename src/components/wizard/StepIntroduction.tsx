@@ -23,9 +23,8 @@ export function StepIntroduction({
 
         {/* Content */}
         <div className="text-center space-y-4">
-          <h1 className="text-2xl font-bold text-foreground">
-            We're sorry your employer treated you unfairly
-          </h1>
+          <h1 className="text-2xl font-bold text-foreground">Welcome,
+let’s take this one step at a time</h1>
           <p className="text-muted-foreground leading-relaxed">If you’ve been treated unfairly at work, this guided process helps you begin the legal steps calmly and safely.</p>
         </div>
 
