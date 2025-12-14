@@ -615,8 +615,10 @@ export function Timeline() {
           )}
         </div>
 
-        {/* Form Content */}
-        {renderStageContent(activeStage)}
+        {/* Form Content - add top margin when badges are present */}
+        <div className={(activeStage === 'acas' || activeStage === 'et1') ? "mt-8" : ""}>
+          {renderStageContent(activeStage)}
+        </div>
       </div>
       
       <GreenPTFloatingChat formData={formData} />
