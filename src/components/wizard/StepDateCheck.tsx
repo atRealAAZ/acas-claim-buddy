@@ -9,7 +9,7 @@ import confusedPersonImg from '@/assets/confused-person.png';
 import sadPersonImg from '@/assets/sad-person.png';
 interface StepDateCheckProps {
   onBack: () => void;
-  onNext: () => void;
+  onNext: (date?: string) => void;
 }
 export function StepDateCheck({
   onBack,
@@ -86,7 +86,7 @@ export function StepDateCheck({
           </div>
 
           {/* Button */}
-          <Button size="lg" className="w-full h-14 rounded-2xl text-lg font-semibold" onClick={onNext}>
+          <Button size="lg" className="w-full h-14 rounded-2xl text-lg font-semibold" onClick={() => onNext(date ? format(date, 'yyyy-MM-dd') : undefined)}>
             Create Account
           </Button>
 
@@ -137,7 +137,7 @@ export function StepDateCheck({
         </div>
 
         {/* Not sure option */}
-        <button type="button" onClick={onNext} className="w-full text-center text-sm text-muted-foreground hover:text-foreground underline transition-colors">
+        <button type="button" onClick={() => onNext(undefined)} className="w-full text-center text-sm text-muted-foreground hover:text-foreground underline transition-colors">
           I'm not sure of the exact date
         </button>
 

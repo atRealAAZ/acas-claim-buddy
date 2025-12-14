@@ -61,7 +61,17 @@ const initialFormData: FormData = {
 export function Timeline() {
   const { signOut, user } = useAuth();
   const [activeStage, setActiveStage] = useState<string>('acas');
-  const [formData, setFormData] = useState<FormData>(initialFormData);
+  
+  // Initialize formData with discriminationDate from user metadata
+  const getInitialFormData = (): FormData => {
+    const discriminationDate = user?.user_metadata?.discriminationDate || '';
+    return {
+      ...initialFormData,
+      employmentEndDate: discriminationDate,
+    };
+  };
+  
+  const [formData, setFormData] = useState<FormData>(getInitialFormData);
   const [generatedForms, setGeneratedForms] = useState<{ acas?: string; et1?: string }>({});
   const [acceptedForms, setAcceptedForms] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [sentForms, setSentForms] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });

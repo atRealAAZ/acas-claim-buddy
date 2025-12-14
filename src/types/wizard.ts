@@ -12,6 +12,7 @@ export interface EmployerDetails {
 export interface WizardData {
   userDetails: UserDetails;
   employerDetails: EmployerDetails;
+  discriminationDate?: string; // ISO date string
 }
 
 export const initialWizardData: WizardData = {
@@ -24,4 +25,5 @@ export const initialWizardData: WizardData = {
     name: '',
     address: '',
   },
+  discriminationDate: undefined,
 };
