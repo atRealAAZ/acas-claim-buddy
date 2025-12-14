@@ -40,15 +40,9 @@ export function StepDateCheck({
 
           {/* Content */}
           <div className="text-center space-y-3">
-            <h2 className="text-2xl font-bold text-foreground">
-              Unfortunately, you may be too late
-            </h2>
-            <p className="text-muted-foreground">
-              ACAS Early Conciliation must typically be started within 3 months minus 1 day of the discrimination occurring.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              However, there may be exceptions. We recommend seeking legal advice to understand your options.
-            </p>
+            <h2 className="text-2xl font-bold text-foreground">The time limit may have passed</h2>
+            <p className="text-muted-foreground">Based on the date you shared, the usual time limit may be over (ACAS Early Conciliation must typically be started within 3 months minus 1 day)</p>
+            <p className="text-sm text-muted-foreground">but this doesn’t always mean the end.  Some situations still allow late claims, especially where disability or health is involved.</p>
           </div>
 
           {/* Cloisters Contact */}
