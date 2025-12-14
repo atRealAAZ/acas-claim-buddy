@@ -85,9 +85,7 @@ export function StepDateCheck({
 
           {/* Content */}
           <div className="text-center space-y-3">
-            <h2 className="text-2xl font-bold text-foreground">
-              You're potentially eligible
-            </h2>
+            <h2 className="text-2xl font-bold text-foreground">Great, you can still take action!</h2>
             <p className="text-muted-foreground">Based on the date you shared, you’re within the time limit to start ACAS Early Conciliation.  Creating an account lets you save your progress and continue when you’re ready.</p>
             <p className="text-sm text-muted-foreground">
           </p>
