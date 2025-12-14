@@ -35,8 +35,6 @@ interface FormData {
   claimType: string;
   detailedComplaint: string;
   desiredOutcome: string;
-  // ET3 specific
-  et3ResponseNotes: string;
 }
 
 const initialFormData: FormData = {
@@ -56,7 +54,6 @@ const initialFormData: FormData = {
   claimType: '',
   detailedComplaint: '',
   desiredOutcome: '',
-  et3ResponseNotes: '',
 };
 
 export function Timeline() {
@@ -66,7 +63,7 @@ export function Timeline() {
   const [generatedForms, setGeneratedForms] = useState<{ acas?: string; et1?: string }>({});
   const [acceptedForms, setAcceptedForms] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [sentForms, setSentForms] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
-  const [expandedForms, setExpandedForms] = useState<{ acas: boolean; et1: boolean; et3: boolean }>({ acas: true, et1: true, et3: true });
+  const [expandedForms, setExpandedForms] = useState<{ acas: boolean; et1: boolean }>({ acas: true, et1: true });
   const [isGenerating, setIsGenerating] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: File[] }>({});
 
@@ -118,12 +115,11 @@ export function Timeline() {
 
   // Calculate deadlines based on termination date
   const getDeadlines = () => {
-    if (!formData.employmentEndDate) return { acas: null, et1: null, et3: null };
+    if (!formData.employmentEndDate) return { acas: null, et1: null };
     const terminationDate = new Date(formData.employmentEndDate);
     const acasDeadline = addDays(addMonths(terminationDate, 3), -1);
     const et1Deadline = addDays(acasDeadline, 30);
-    const et3Deadline = addDays(et1Deadline, 28);
-    return { acas: acasDeadline, et1: et1Deadline, et3: et3Deadline };
+    return { acas: acasDeadline, et1: et1Deadline };
   };
 
   const deadlines = getDeadlines();
@@ -143,9 +139,8 @@ export function Timeline() {
   };
 
   const stages = [
-    { id: 'acas', title: 'ACAS Pre-conciliation', timeEstimate: '13min', progress: 25 },
-    { id: 'et1', title: 'ET1 Form', timeEstimate: '9min', progress: 50 },
-    { id: 'et3', title: 'ET3 Form', timeEstimate: '5min', progress: 75 },
+    { id: 'acas', title: 'ACAS Pre-conciliation', timeEstimate: '13min', progress: 33 },
+    { id: 'et1', title: 'ET1 Form', timeEstimate: '9min', progress: 66 },
     { id: 'waiting', title: 'Waiting Employer Response', timeEstimate: '5min', progress: 100 },
   ];
 
@@ -337,6 +332,31 @@ export function Timeline() {
         />
       </div>
 
+      {/* Upload Evidence Documents */}
+      <div className="space-y-2">
+        <Label className="text-primary font-medium">Upload Evidence Documents</Label>
+        <div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center bg-primary/5">
+          <input
+            type="file"
+            multiple
+            className="hidden"
+            id="et1-evidence-upload"
+            onChange={(e) => handleFileUpload('et1', e.target.files)}
+          />
+          <label htmlFor="et1-evidence-upload" className="cursor-pointer">
+            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-xl flex items-center justify-center">
+              <Upload className="w-8 h-8 text-primary" />
+            </div>
+            <p className="text-muted-foreground">Click here to upload supporting documents</p>
+          </label>
+          {uploadedFiles['et1']?.length > 0 && (
+            <div className="mt-4 text-sm text-primary font-medium">
+              {uploadedFiles['et1'].length} file(s) uploaded
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="pt-4">
         <Button
           onClick={() => generateForm('et1')}
@@ -429,54 +449,6 @@ export function Timeline() {
     </div>
   );
 
-  // Render ET3 Form section
-  const renderET3Form = () => (
-    <div className="space-y-5">
-      <div className="space-y-2">
-        <Label className="text-primary font-medium">Upload Evidence Documents</Label>
-        <div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center bg-primary/5">
-          <input
-            type="file"
-            multiple
-            className="hidden"
-            id="et3-upload"
-            onChange={(e) => handleFileUpload('et3', e.target.files)}
-          />
-          <label htmlFor="et3-upload" className="cursor-pointer">
-            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-xl flex items-center justify-center">
-              <Upload className="w-8 h-8 text-primary" />
-            </div>
-            <p className="text-muted-foreground">Click here to upload</p>
-          </label>
-          {uploadedFiles['et3']?.length > 0 && (
-            <div className="mt-4 text-sm text-primary font-medium">
-              {uploadedFiles['et3'].length} file(s) uploaded
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="pt-4">
-        <Button
-          className="w-full h-14 rounded-full text-lg font-semibold"
-          size="lg"
-        >
-          Generate ET3 Form
-        </Button>
-      </div>
-
-      <div className="pt-4">
-        <Button
-          onClick={navigateToNextStage}
-          variant="outline"
-          className="w-full h-12 rounded-full"
-          size="lg"
-        >
-          Next
-        </Button>
-      </div>
-    </div>
-  );
 
   // Render Waiting Response section with meditation
   const renderWaitingResponse = () => (
@@ -499,8 +471,6 @@ export function Timeline() {
         return renderAcasForm();
       case 'et1':
         return renderET1Form();
-      case 'et3':
-        return renderET3Form();
       case 'waiting':
         return renderWaitingResponse();
       default:
