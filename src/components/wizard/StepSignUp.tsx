@@ -8,9 +8,10 @@ import { ArrowLeft } from 'lucide-react';
 interface StepSignUpProps {
   onBack: () => void;
   onNext: () => void;
+  discriminationDate?: string;
 }
 
-export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
+export function StepSignUp({ onBack, onNext, discriminationDate }: StepSignUpProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,7 +35,7 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
           onNext();
         }
       } else {
-        const { error } = await signUp(email, password);
+        const { error } = await signUp(email, password, { discriminationDate });
         if (error) {
           toast.error(error.message);
         } else {

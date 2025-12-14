@@ -12,10 +12,16 @@ const STEP_LABELS = ['Introduction', 'Options', 'Date Check', 'Sign Up', 'ACAS F
 
 export function ACASWizard() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [discriminationDate, setDiscriminationDate] = useState<string | undefined>();
   const { user, loading } = useAuth();
 
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 5));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
+  const handleDateCheckNext = (date?: string) => {
+    setDiscriminationDate(date);
+    nextStep();
+  };
 
   // Show loading state
   if (loading) {
@@ -50,11 +56,11 @@ export function ACASWizard() {
         )}
 
         {currentStep === 3 && (
-          <StepDateCheck onBack={prevStep} onNext={nextStep} />
+          <StepDateCheck onBack={prevStep} onNext={handleDateCheckNext} />
         )}
 
         {currentStep === 4 && (
-          <StepSignUp onBack={prevStep} onNext={nextStep} />
+          <StepSignUp onBack={prevStep} onNext={nextStep} discriminationDate={discriminationDate} />
         )}
 
         {currentStep === 5 && (
