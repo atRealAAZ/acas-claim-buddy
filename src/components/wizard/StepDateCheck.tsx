@@ -115,7 +115,7 @@ export function StepDateCheck({
       <div className="max-w-sm w-full space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-foreground">When did the discrimination happen?</h2>
+          <h2 className="text-2xl font-bold text-foreground">When did this happen?</h2>
           <p className="text-sm text-muted-foreground">This helps us check time limits — if you’re not sure, that’s okay.</p>
         </div>
 
