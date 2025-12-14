@@ -139,9 +139,9 @@ export function Timeline() {
   };
 
   const stages = [
-    { id: 'acas', title: 'ACAS Pre-conciliation', timeEstimate: '13min', progress: 33 },
-    { id: 'et1', title: 'ET1 Form', timeEstimate: '9min', progress: 66 },
-    { id: 'waiting', title: 'Waiting Employer Response', timeEstimate: '5min', progress: 100 },
+    { id: 'acas', title: 'ACAS Pre-conciliation', timeEstimate: '13min', progress: 0 },
+    { id: 'et1', title: 'ET1 Form', timeEstimate: '9min', progress: 33 },
+    { id: 'waiting', title: 'Waiting Employer Response', timeEstimate: '5min', progress: 66 },
   ];
 
   const navigateToNextStage = () => {
@@ -330,31 +330,6 @@ export function Timeline() {
           rows={6}
           className={textareaClassName}
         />
-      </div>
-
-      {/* Upload Evidence Documents */}
-      <div className="space-y-2">
-        <Label className="text-primary font-medium">Upload Evidence Documents</Label>
-        <div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center bg-primary/5">
-          <input
-            type="file"
-            multiple
-            className="hidden"
-            id="et1-evidence-upload"
-            onChange={(e) => handleFileUpload('et1', e.target.files)}
-          />
-          <label htmlFor="et1-evidence-upload" className="cursor-pointer">
-            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-xl flex items-center justify-center">
-              <Upload className="w-8 h-8 text-primary" />
-            </div>
-            <p className="text-muted-foreground">Click here to upload supporting documents</p>
-          </label>
-          {uploadedFiles['et1']?.length > 0 && (
-            <div className="mt-4 text-sm text-primary font-medium">
-              {uploadedFiles['et1'].length} file(s) uploaded
-            </div>
-          )}
-        </div>
       </div>
 
       <div className="pt-4">
