@@ -44,9 +44,9 @@ export function StepChooseOptions({ onBack, onNext }: StepChooseOptionsProps) {
               : "bg-primary/40 text-primary-foreground hover:bg-primary/60"
           }`}
         >
-          Unfair
+          I was dismissed
           <br />
-          dismissal
+          or let go
         </button>
         <button
           onClick={() => toggleOption("role-changes")}
