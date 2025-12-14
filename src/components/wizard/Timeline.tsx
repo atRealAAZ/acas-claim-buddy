@@ -67,40 +67,36 @@ export function Timeline() {
   const [isGenerating, setIsGenerating] = useState<{ acas: boolean; et1: boolean }>({ acas: false, et1: false });
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: File[] }>({});
   const [showAutosaved, setShowAutosaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const hideAutosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Autosave effect - triggers when form data changes
   useEffect(() => {
-    // Clear existing timeouts
+    // Clear existing timeout
     if (autosaveTimeoutRef.current) {
       clearTimeout(autosaveTimeoutRef.current);
-    }
-    if (hideAutosaveTimeoutRef.current) {
-      clearTimeout(hideAutosaveTimeoutRef.current);
     }
 
     // Only show autosave if there's actual data
     const hasData = Object.values(formData).some(value => value.trim() !== '');
-    if (!hasData) return;
+    if (!hasData) {
+      setShowAutosaved(false);
+      return;
+    }
+
+    // Show saving state immediately
+    setIsSaving(true);
 
     // Debounce autosave by 1 second
     autosaveTimeoutRef.current = setTimeout(() => {
       // Simulate autosave (in real app, this would save to backend)
+      setIsSaving(false);
       setShowAutosaved(true);
-      
-      // Hide the notification after 3 seconds
-      hideAutosaveTimeoutRef.current = setTimeout(() => {
-        setShowAutosaved(false);
-      }, 3000);
     }, 1000);
 
     return () => {
       if (autosaveTimeoutRef.current) {
         clearTimeout(autosaveTimeoutRef.current);
-      }
-      if (hideAutosaveTimeoutRef.current) {
-        clearTimeout(hideAutosaveTimeoutRef.current);
       }
     };
   }, [formData]);
@@ -541,15 +537,21 @@ export function Timeline() {
       {/* Active Stage Form */}
       <div className="relative bg-card rounded-2xl border border-border p-6 animate-in fade-in duration-300">
         {/* Autosave Notification */}
-        <div
-          className={cn(
-            "absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 text-green-600 text-xs font-medium rounded-full transition-all duration-300",
-            showAutosaved ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
-          )}
-        >
-          <Cloud className="w-3.5 h-3.5" />
-          Autosaved
-        </div>
+        {(showAutosaved || isSaving) && (
+          <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 text-green-600 text-xs font-medium rounded-full">
+            {isSaving ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Check className="w-3.5 h-3.5" />
+                Autosaved
+              </>
+            )}
+          </div>
+        )}
 
         {/* Form Title */}
         <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6">
