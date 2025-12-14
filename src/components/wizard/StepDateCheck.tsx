@@ -42,7 +42,7 @@ export function StepDateCheck({
           <div className="text-center space-y-3">
             <h2 className="text-2xl font-bold text-foreground">The time limit may have passed</h2>
             <p className="text-muted-foreground">Based on the date you shared, the usual time limit may be over (ACAS Early Conciliation must typically be started within 3 months minus 1 day)</p>
-            <p className="text-sm text-muted-foreground">But this doesn’t always mean the end. Some situations still allow late claims, especially where disability or health is involved. </p>
+            <p className="text-sm text-muted-foreground">But this doesn’t always mean the end, especially where disability or health is involved.</p>
           </div>
 
           {/* Cloisters Contact */}
