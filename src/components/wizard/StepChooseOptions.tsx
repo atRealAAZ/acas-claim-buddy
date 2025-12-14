@@ -34,20 +34,79 @@ export function StepChooseOptions({ onBack, onNext }: StepChooseOptionsProps) {
       </div>
 
       {/* Bubble options */}
-      <div className="flex flex-wrap justify-center gap-4 w-full max-w-lg my-4">
-        {OPTIONS.map((option) => (
-          <button
-            key={option.id}
-            onClick={() => toggleOption(option.id)}
-            className={`w-28 h-28 rounded-full flex items-center justify-center text-center text-xs font-medium transition-all duration-200 p-3 ${
-              selected.includes(option.id)
-                ? "bg-primary text-primary-foreground scale-105 shadow-lg"
-                : "bg-primary/50 text-primary-foreground hover:bg-primary/70 hover:scale-102"
-            }`}
-          >
-            {option.label}
-          </button>
-        ))}
+      <div className="relative w-full max-w-sm h-[380px] my-4">
+        {/* Row 1 - Unfair dismissal */}
+        <button
+          onClick={() => toggleOption("dismissed")}
+          className={`absolute left-[5%] top-[0%] w-24 h-24 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 p-3 ${
+            selected.includes("dismissed")
+              ? "bg-primary text-primary-foreground border-2 border-primary"
+              : "bg-background text-foreground border-2 border-primary/40 hover:border-primary/70"
+          }`}
+        >
+          Unfair dismissal
+        </button>
+
+        {/* Role changes */}
+        <button
+          onClick={() => toggleOption("role-changes")}
+          className={`absolute left-[32%] top-[12%] w-20 h-20 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 p-2 ${
+            selected.includes("role-changes")
+              ? "bg-primary text-primary-foreground border-2 border-primary"
+              : "bg-background text-foreground border-2 border-primary/40 hover:border-primary/70"
+          }`}
+        >
+          Role changes
+        </button>
+
+        {/* Workplace bullying */}
+        <button
+          onClick={() => toggleOption("bullying")}
+          className={`absolute right-[8%] top-[14%] w-24 h-24 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 p-3 ${
+            selected.includes("bullying")
+              ? "bg-primary text-primary-foreground border-2 border-primary"
+              : "bg-background text-foreground border-2 border-primary/40 hover:border-primary/70"
+          }`}
+        >
+          Workplace bullying
+        </button>
+
+        {/* Reduced hours */}
+        <button
+          onClick={() => toggleOption("hours-pay-reduced")}
+          className={`absolute left-[2%] top-[32%] w-22 h-22 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 p-3 ${
+            selected.includes("hours-pay-reduced")
+              ? "bg-primary text-primary-foreground border-2 border-primary"
+              : "bg-background text-foreground border-2 border-primary/40 hover:border-primary/70"
+          }`}
+          style={{ width: "5.5rem", height: "5.5rem" }}
+        >
+          Reduced hours
+        </button>
+
+        {/* Adjustment refusal */}
+        <button
+          onClick={() => toggleOption("adjustments-refused")}
+          className={`absolute left-[28%] top-[42%] w-28 h-28 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 p-3 border-dashed ${
+            selected.includes("adjustments-refused")
+              ? "bg-primary text-primary-foreground border-2 border-primary"
+              : "bg-background text-foreground border-2 border-primary/40 hover:border-primary/70"
+          }`}
+        >
+          Adjustment refusal
+        </button>
+
+        {/* Other */}
+        <button
+          onClick={() => toggleOption("something-else")}
+          className={`absolute left-[8%] top-[68%] w-20 h-20 rounded-full flex items-center justify-center text-center text-sm font-medium transition-all duration-200 p-3 ${
+            selected.includes("something-else")
+              ? "bg-primary text-primary-foreground border-2 border-primary"
+              : "bg-background text-foreground border-2 border-primary/40 hover:border-primary/70"
+          }`}
+        >
+          Other
+        </button>
       </div>
 
       {/* Navigation buttons */}
