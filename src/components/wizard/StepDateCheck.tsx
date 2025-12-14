@@ -125,7 +125,9 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
         </div>
 
         {/* Inline Calendar */}
-        <div className="flex justify-center">
+        <div className="space-y-2">
+          <Label className="text-foreground text-sm font-medium">Date of discrimination</Label>
+          <div className="flex justify-center">
           <Calendar
             mode="single"
             selected={date}
@@ -154,6 +156,7 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
               day_hidden: "invisible",
             }}
           />
+          </div>
         </div>
 
         {/* Next Button */}
