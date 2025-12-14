@@ -5,8 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Calendar as CalendarIcon, ExternalLink, AlertCircle } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import confusedPersonImg from '@/assets/confused-person.png';
-import sadPersonImg from '@/assets/sad-person.png';
+import successPersonImg from '@/assets/success-person.png';
+import waitingPersonImg from '@/assets/waiting-person.png';
 interface StepDateCheckProps {
   onBack: () => void;
   onNext: (date?: string) => void;
@@ -35,7 +35,7 @@ export function StepDateCheck({
         <div className="max-w-sm w-full space-y-8">
           {/* Illustration */}
           <div className="flex justify-center">
-            <img src={sadPersonImg} alt="Sad person" className="w-48 h-48 object-contain" />
+            <img src={waitingPersonImg} alt="Person thinking" className="w-48 h-48 object-contain" />
           </div>
 
           {/* Content */}
@@ -74,7 +74,7 @@ export function StepDateCheck({
         <div className="max-w-sm w-full space-y-8">
           {/* Illustration */}
           <div className="flex justify-center">
-            <img src={confusedPersonImg} alt="Person thinking" className="w-48 h-48 object-contain" />
+            <img src={successPersonImg} alt="Person celebrating" className="w-48 h-48 object-contain" />
           </div>
 
           {/* Content */}
