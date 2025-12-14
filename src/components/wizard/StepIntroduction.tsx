@@ -18,7 +18,7 @@ export function StepIntroduction({
       <div className="max-w-sm w-full space-y-8">
         {/* Illustration */}
         <div className="flex justify-center">
-          <img src={confusedPersonImg} alt="Person thinking" className="w-48 h-48 object-contain" />
+          <img alt="Person thinking" className="w-48 h-48 object-contain" src="/lovable-uploads/e21fc5c7-0335-4d59-aa97-157d55ff18df.png" />
         </div>
 
         {/* Content */}
@@ -49,17 +49,10 @@ let’s take this one step at a time</h1>
 
         {/* Navigation Buttons */}
         <div className="flex gap-3 pt-4">
-          <Button 
-            variant="secondary" 
-            onClick={() => {}} 
-            className="flex-1 h-12 rounded-full text-base font-medium bg-muted hover:bg-muted/80"
-          >
+          <Button variant="secondary" onClick={() => {}} className="flex-1 h-12 rounded-full text-base font-medium bg-muted hover:bg-muted/80">
             Back
           </Button>
-          <Button 
-            onClick={onNext} 
-            className="flex-[2] h-12 rounded-full text-base font-medium"
-          >
+          <Button onClick={onNext} className="flex-[2] h-12 rounded-full text-base font-medium">
             Next
           </Button>
         </div>
