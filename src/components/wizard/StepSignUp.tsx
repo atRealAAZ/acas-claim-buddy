@@ -18,7 +18,7 @@ export function StepSignUp({ onBack, onNext }: StepSignUpProps) {
   const [loading, setLoading] = useState(false);
   const { signUp, signIn, signInWithGoogle } = useAuth();
 
-  const isValid = email.trim() !== '' && password.length >= 6 && (isLogin || confirmPassword === password);
+  const isValid = true; // Temporarily disabled for testing
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
