@@ -47,12 +47,9 @@ let’s take this one step at a time</h1>
           Once you're ready, we can check if you can make a claim against them.
         </p>
 
-        {/* Navigation Buttons */}
-        <div className="flex gap-3 pt-4">
-          <Button variant="secondary" onClick={() => {}} className="flex-1 h-12 rounded-full text-base font-medium bg-muted hover:bg-muted/80">
-            Back
-          </Button>
-          <Button onClick={onNext} className="flex-[2] h-12 rounded-full text-base font-medium">
+        {/* Navigation Button */}
+        <div className="pt-4">
+          <Button onClick={onNext} className="w-full h-12 rounded-full text-base font-medium">
             Next
           </Button>
         </div>
