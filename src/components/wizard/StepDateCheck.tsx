@@ -102,6 +102,9 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
             <p className="text-muted-foreground">
               Based on the date you provided, you're within the time limit to start an ACAS Early Conciliation claim.
             </p>
+            <p className="text-sm text-muted-foreground">
+              Create an account to continue with your claim.
+            </p>
           </div>
 
           {/* Button */}
@@ -110,7 +113,7 @@ export function StepDateCheck({ onBack, onNext }: StepDateCheckProps) {
             className="w-full h-14 rounded-2xl text-lg font-semibold" 
             onClick={onNext}
           >
-            Next
+            Create Account
           </Button>
 
           {/* Back */}
