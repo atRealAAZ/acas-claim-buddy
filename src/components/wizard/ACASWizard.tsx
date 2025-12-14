@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { StepIntroduction } from './StepIntroduction';
 import { StepChooseOptions } from './StepChooseOptions';
@@ -14,6 +14,18 @@ export function ACASWizard() {
   const [currentStep, setCurrentStep] = useState(1);
   const [discriminationDate, setDiscriminationDate] = useState<string | undefined>();
   const { user, loading } = useAuth();
+  const wasLoggedIn = useRef(false);
+
+  // Track login state and redirect to sign-up on logout
+  useEffect(() => {
+    if (user) {
+      wasLoggedIn.current = true;
+    } else if (wasLoggedIn.current && !loading) {
+      // User just logged out, go to sign-up step
+      setCurrentStep(4);
+      wasLoggedIn.current = false;
+    }
+  }, [user, loading]);
 
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 5));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
@@ -23,7 +35,6 @@ export function ACASWizard() {
     nextStep();
   };
 
-  // Show loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
