@@ -4,16 +4,17 @@ import { StepIntroduction } from './StepIntroduction';
 import { StepChooseOptions } from './StepChooseOptions';
 import { StepDateCheck } from './StepDateCheck';
 import { StepSignUp } from './StepSignUp';
+import { StepACASForm } from './StepACASForm';
 import { Timeline } from './Timeline';
 import { useAuth } from '@/hooks/useAuth';
 
-const STEP_LABELS = ['Introduction', 'Options', 'Date Check', 'Sign Up'];
+const STEP_LABELS = ['Introduction', 'Options', 'Date Check', 'Sign Up', 'ACAS Form'];
 
 export function ACASWizard() {
   const [currentStep, setCurrentStep] = useState(1);
   const { user, loading } = useAuth();
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 5));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   // Show loading state
@@ -39,13 +40,15 @@ export function ACASWizard() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-2xl mx-auto px-4 py-6 sm:py-10">
-        <div className="mb-8">
-          <ProgressIndicator
-            currentStep={currentStep}
-            totalSteps={4}
-            labels={STEP_LABELS}
-          />
-        </div>
+        {currentStep < 5 && (
+          <div className="mb-8">
+            <ProgressIndicator
+              currentStep={currentStep}
+              totalSteps={4}
+              labels={STEP_LABELS.slice(0, 4)}
+            />
+          </div>
+        )}
 
         {currentStep === 1 && (
           <StepIntroduction onNext={nextStep} />
@@ -60,7 +63,11 @@ export function ACASWizard() {
         )}
 
         {currentStep === 4 && (
-          <StepSignUp onBack={prevStep} onNext={() => {}} />
+          <StepSignUp onBack={prevStep} onNext={nextStep} />
+        )}
+
+        {currentStep === 5 && (
+          <StepACASForm onBack={prevStep} onNext={() => {}} />
         )}
       </div>
     </div>
