@@ -201,17 +201,21 @@ export function MeditationWidget() {
     }
 
     const utterance = new SpeechSynthesisUtterance(MEDITATION_SCRIPTS[selectedScript].text);
-    utterance.rate = 0.85;
-    utterance.pitch = 0.95;
+    utterance.rate = 0.8;
+    utterance.pitch = 1.1;
     
-    // Try to find a calm-sounding voice
+    // Try to find a calm, feminine voice
     const voices = window.speechSynthesis.getVoices();
     const preferredVoice = voices.find(v => 
       v.name.includes('Samantha') || 
+      v.name.includes('Victoria') ||
       v.name.includes('Karen') || 
-      v.name.includes('Daniel') ||
-      v.name.includes('Google UK English Female')
-    ) || voices.find(v => v.lang.startsWith('en'));
+      v.name.includes('Moira') ||
+      v.name.includes('Fiona') ||
+      v.name.includes('Google UK English Female') ||
+      v.name.includes('Microsoft Zira') ||
+      v.name.includes('Microsoft Hazel')
+    ) || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'));
     
     if (preferredVoice) {
       utterance.voice = preferredVoice;
