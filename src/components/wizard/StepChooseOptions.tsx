@@ -115,18 +115,18 @@ export function StepChooseOptions({
       </div>
 
       {/* Navigation buttons */}
-      <div className="flex gap-3 w-full max-w-sm pt-4">
+      <div className="flex gap-4 w-full max-w-sm pt-4">
         <Button
           variant="secondary"
           onClick={onBack}
-          className="flex-1 h-12 rounded-full text-base font-medium bg-muted hover:bg-muted/80"
+          className="px-8 h-12 rounded-full text-base font-medium bg-muted hover:bg-muted/80 text-muted-foreground"
         >
           Back
         </Button>
         <Button
           onClick={onNext}
           disabled={selected.length === 0}
-          className="flex-[2] h-12 rounded-full text-base font-medium"
+          className="flex-1 h-12 rounded-full text-base font-medium"
         >
           Next
         </Button>
