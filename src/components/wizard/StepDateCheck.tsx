@@ -147,6 +147,15 @@ export function StepDateCheck({
           </div>
         </div>
 
+        {/* Not sure option */}
+        <button
+          type="button"
+          onClick={onNext}
+          className="w-full text-center text-sm text-muted-foreground hover:text-foreground underline transition-colors"
+        >
+          I'm not sure of the exact date
+        </button>
+
         {/* Next Button */}
         <Button onClick={handleSubmit} size="lg" disabled={!date} className="w-full h-14 rounded-2xl text-lg font-semibold">
           Next
