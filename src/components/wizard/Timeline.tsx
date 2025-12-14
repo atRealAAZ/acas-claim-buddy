@@ -227,6 +227,12 @@ export function Timeline() {
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-primary" />
                 <h3 className="text-lg font-semibold text-foreground">Generated ACAS Form</h3>
+                {sentForms.acas && (
+                  <span className="ml-2 px-2.5 py-0.5 bg-green-500/20 text-green-600 text-xs font-semibold rounded-full flex items-center gap-1">
+                    <Check className="w-3 h-3" />
+                    Sent
+                  </span>
+                )}
               </div>
               {expandedForms.acas ? (
                 <ChevronDown className="w-5 h-5 text-muted-foreground" />
