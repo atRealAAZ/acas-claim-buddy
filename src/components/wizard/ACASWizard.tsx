@@ -40,15 +40,6 @@ export function ACASWizard() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-2xl mx-auto px-4 py-6 sm:py-10">
-        {currentStep < 5 && (
-          <div className="mb-8">
-            <ProgressIndicator
-              currentStep={currentStep}
-              totalSteps={4}
-              labels={STEP_LABELS.slice(0, 4)}
-            />
-          </div>
-        )}
 
         {currentStep === 1 && (
           <StepIntroduction onNext={nextStep} />
