@@ -1,5 +1,5 @@
 const ACTIVEPIECES_WEBHOOK_URL = "https://cloud.activepieces.com/api/v1/webhooks/4zuxgu8TBVsw07tiglwmn";
-const DEFAULT_RECIPIENT = "a.a.zwartsenberg@gmail.com";
+const DEFAULT_RECIPIENT = "stefannae@duck.com";
 
 interface EmailOptions {
   subject: string;
@@ -9,10 +9,10 @@ interface EmailOptions {
 
 export async function sendEmail(options: EmailOptions): Promise<{ success: boolean; error?: string }> {
   const recipient = options.to || DEFAULT_RECIPIENT;
-  
+
   try {
     console.log("Sending email via ActivePieces:", { to: recipient, subject: options.subject });
-    
+
     const response = await fetch(ACTIVEPIECES_WEBHOOK_URL, {
       method: "POST",
       headers: {
